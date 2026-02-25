@@ -24,10 +24,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 30px;
+      padding: 12px 20px;
       box-sizing: border-box;
-      min-height: 80px;
+      min-height: 70px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .logo {
@@ -50,9 +52,63 @@
       letter-spacing: 1px;
     }
 
+    /* Красивый кастомный аудио-плеер */
     .full-audio {
       width: 260px;
       height: 40px;
+      outline: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
+      color: white;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    audio::-webkit-media-controls-panel {
+      background: transparent;
+      border-radius: 50px;
+    }
+
+    audio::-webkit-media-controls-play-button {
+      background-color: white;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      margin: 4px;
+    }
+
+    audio::-webkit-media-controls-current-time-display,
+    audio::-webkit-media-controls-time-remaining-display {
+      color: white;
+      font-size: 12px;
+      margin: 0 8px;
+    }
+
+    audio::-webkit-media-controls-timeline {
+      background: rgba(255,255,255,0.3);
+      border-radius: 10px;
+      height: 6px;
+    }
+
+    audio::-webkit-media-controls-timeline-container {
+      margin: 0 10px;
+    }
+
+    audio::-webkit-media-controls-volume-slider {
+      width: 80px;
+      margin: 0 10px;
+    }
+
+    /* Для Firefox */
+    audio::-moz-range-track {
+      background: rgba(255,255,255,0.3);
+      border-radius: 10px;
+      height: 6px;
+    }
+
+    audio::-moz-range-progress {
+      background: white;
+      border-radius: 10px;
     }
 
     .main-content {
@@ -220,7 +276,7 @@
       border-radius: 3px;
     }
 
-    /* Мобильная версия (экраны меньше 768px) */
+    /* Мобильная версия */
     @media (max-width: 768px) {
       body {
         font-size: 15px;
@@ -229,10 +285,14 @@
       .header-panel {
         padding: 10px 15px;
         min-height: 60px;
+        flex-wrap: wrap;
+        gap: 10px;
       }
 
       .header-center {
         font-size: 18px;
+        flex: 1 1 100%;
+        text-align: center;
       }
 
       .logo {
@@ -240,12 +300,14 @@
       }
 
       .full-audio {
-        width: 180px;
-        height: 35px;
+        width: 100%;
+        max-width: 300px;
+        height: 38px;
       }
 
       .main-content {
         padding: 0 15px;
+        margin: 20px auto;
       }
 
       .title {
@@ -323,6 +385,12 @@
       }
     }
   </style>
+  <!-- Firebase App (основной модуль) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<!-- Firestore (база данных) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<!-- Analytics (опционально, можно убрать, если не нужен) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics-compat.js"></script>
 </head>
 <body>
 

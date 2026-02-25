@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Dashboard - IELTS Reports</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+
   <style>
     :root {
       --primary: #a81011;
@@ -113,6 +118,11 @@
       margin: 0;
     }
 
+    .table-wrapper {
+      overflow-x: auto;
+      margin-bottom: 40px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -120,6 +130,7 @@
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      min-width: 600px;
     }
 
     th, td {
@@ -297,100 +308,30 @@
 
     /* Мобильная версия */
     @media (max-width: 768px) {
-      body {
-        font-size: 15px;
-      }
-
-      .header-panel {
-        padding: 10px 15px;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .header-center {
-        font-size: 20px;
-        flex: 1 1 100%;
-        text-align: center;
-      }
-
-      .logo {
-        height: 40px;
-      }
-
-      .logout-btn {
-        padding: 8px 16px;
-        font-size: 14px;
-      }
-
-      .main-content {
-        padding: 0 15px;
-        margin: 20px auto;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-        gap: 15px;
-      }
-
-      .stat-card {
-        padding: 15px;
-      }
-
-      .stat-card p {
-        font-size: 24px;
-      }
-
-      table {
-        font-size: 14px;
-      }
-
-      th, td {
-        padding: 12px 10px;
-      }
-
-      .modal-content, .confirm-modal-content {
-        padding: 20px;
-        width: 95%;
-      }
-
-      .modal-content h2 {
-        font-size: 22px;
-      }
-
-      .confirm-buttons {
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .confirm-btn {
-        width: 100%;
-      }
+      body { font-size: 15px; }
+      .header-panel { padding: 10px 15px; flex-wrap: wrap; gap: 10px; }
+      .header-center { font-size: 20px; flex: 1 1 100%; text-align: center; }
+      .logo { height: 40px; }
+      .logout-btn { padding: 8px 16px; font-size: 14px; }
+      .main-content { padding: 0 15px; margin: 20px auto; }
+      h1 { font-size: 24px; }
+      .stats { grid-template-columns: 1fr; gap: 15px; }
+      .stat-card { padding: 15px; }
+      .stat-card p { font-size: 24px; }
+      .table-wrapper { overflow-x: auto; }
+      table { font-size: 14px; min-width: 600px; }
+      th, td { padding: 12px 10px; }
+      .modal-content, .confirm-modal-content { padding: 20px; width: 95%; }
+      .modal-content h2 { font-size: 22px; }
+      .confirm-buttons { flex-direction: column; gap: 10px; }
+      .confirm-btn { width: 100%; }
     }
 
     @media (max-width: 480px) {
-      h1 {
-        font-size: 20px;
-      }
-
-      .stat-card h3 {
-        font-size: 15px;
-      }
-
-      .stat-card p {
-        font-size: 22px;
-      }
-
-      table {
-        font-size: 13px;
-      }
-
-      th, td {
-        padding: 10px 8px;
-      }
+      h1 { font-size: 20px; }
+      .stat-card p { font-size: 22px; }
+      table { font-size: 13px; min-width: 500px; }
+      th, td { padding: 10px 8px; }
     }
   </style>
 </head>
@@ -438,7 +379,7 @@
   </div>
 
   <h1>All Student Results</h1>
-  <div style="overflow-x: auto;">
+  <div class="table-wrapper">
     <table id="reportsTable">
       <thead>
         <tr>
@@ -475,7 +416,7 @@
     <span class="close-btn" onclick="document.getElementById('clearConfirmModal').style.display='none'">×</span>
     <h2 style="color:var(--danger);">Clear All Reports?</h2>
     <p style="font-size:17px; margin:20px 0 30px; color:#444;">
-      This action will permanently delete <strong>all</strong> student results.<br>Are you sure you want to continue?
+      This action will permanently delete <strong>all</strong> student results from the cloud.<br>Are you sure?
     </p>
     <div class="confirm-buttons">
       <button class="confirm-btn cancel-btn" onclick="document.getElementById('clearConfirmModal').style.display='none'">Cancel</button>
@@ -485,6 +426,21 @@
 </div>
 
 <script>
+// ================== Firebase ==================
+const firebaseConfig = {
+  apiKey: "AIzaSyC8o2F60E8Pi_TfEDA_z6EeokG-gECUXjg",
+  authDomain: "oxbridge-listening-practice.firebaseapp.com",
+  projectId: "oxbridge-listening-practice",
+  storageBucket: "oxbridge-listening-practice.firebasestorage.app",
+  messagingSenderId: "32964456597",
+  appId: "1:32964456597:web:3a315700117ff92a6a2b9c",
+  measurementId: "G-HBCHQ49MWS"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+// ================== /Firebase ==================
+
 function checkLogin() {
   const login = document.getElementById("login").value.trim();
   const password = document.getElementById("password").value.trim();
@@ -515,52 +471,56 @@ function logout() {
 }
 
 function loadReports() {
-  let reports = JSON.parse(localStorage.getItem("reports")) || [];
   const tbody = document.getElementById("reportsBody");
-  tbody.innerHTML = "";
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">Загрузка результатов...</td></tr>';
 
-  if (reports.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">No reports yet</td></tr>';
-    updateStats(0, 0, 0);
-    return;
-  }
+  db.collection("reports")
+    .orderBy("timestamp", "desc")
+    .onSnapshot(snapshot => {
+      tbody.innerHTML = "";
 
-  const grouped = {};
-  reports.forEach(r => {
-    if (!grouped[r.student]) {
-      grouped[r.student] = {
-        correct: 0,
-        total: 0,
-        date: r.date,
-        parts: []
-      };
-    }
-    grouped[r.student].correct += r.correct;
-    grouped[r.student].total += r.total;
-    if (r.date > grouped[r.student].date) grouped[r.student].date = r.date;
-    grouped[r.student].parts.push(r.part);
-  });
+      if (snapshot.empty) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">Пока нет результатов студентов</td></tr>';
+        updateStats(0, 0, 0);
+        return;
+      }
 
-  let totalStudents = Object.keys(grouped).length;
-  let totalBandSum = 0;
+      const grouped = {};
+      snapshot.forEach(doc => {
+        const r = doc.data();
+        if (!grouped[r.student]) {
+          grouped[r.student] = { correct: 0, total: 0, date: r.date, parts: [] };
+        }
+        grouped[r.student].correct += r.correct;
+        grouped[r.student].total += r.total;
+        if (r.date > grouped[r.student].date) grouped[r.student].date = r.date;
+        grouped[r.student].parts.push(r.part);
+      });
 
-  Object.keys(grouped).forEach(student => {
-    const g = grouped[student];
-    const band = Math.round((g.correct / g.total) * 9 * 2) / 2;
-    totalBandSum += band;
+      let totalStudents = Object.keys(grouped).length;
+      let totalBandSum = 0;
 
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${student}</td>
-      <td>${g.correct} / ${g.total}</td>
-      <td class="${band >= 7 ? 'band-high' : band >= 5 ? 'band-medium' : 'band-low'}">${band}</td>
-      <td>${new Date(g.date).toLocaleString()}</td>
-      <td><button onclick="showStudentDetails('${student}')">View Details</button></td>
-    `;
-    tbody.appendChild(row);
-  });
+      Object.keys(grouped).forEach(student => {
+        const g = grouped[student];
+        const band = Math.round((g.correct / g.total) * 9 * 2) / 2;
+        totalBandSum += band;
 
-  updateStats(totalStudents, totalBandSum / totalStudents || 0);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${student}</td>
+          <td>${g.correct} / ${g.total}</td>
+          <td class="${band >= 7 ? 'band-high' : band >= 5 ? 'band-medium' : 'band-low'}">${band}</td>
+          <td>${new Date(g.date).toLocaleString()}</td>
+          <td><button onclick="showStudentDetails('${student}')">Посмотреть детали</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      updateStats(totalStudents, totalBandSum / totalStudents || 0);
+    }, error => {
+      console.error("Ошибка загрузки из Firestore:", error);
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:red;">Ошибка загрузки данных</td></tr>';
+    });
 }
 
 function updateStats(students, avgBand) {
@@ -570,61 +530,81 @@ function updateStats(students, avgBand) {
 }
 
 function showStudentDetails(student) {
-  const reports = JSON.parse(localStorage.getItem("reports")) || [];
-  const studentReports = reports.filter(r => r.student === student);
-
-  if (studentReports.length === 0) return;
-
-  const modal = document.getElementById("detailsModal");
-  const title = document.getElementById("modalTitle");
-  const content = document.getElementById("modalContent");
-
-  title.innerText = `${student} - Full Test Report`;
-
-  let html = `<p><strong>Total Score:</strong> ${studentReports.reduce((sum, r) => sum + r.correct, 0)} / 40</p>`;
-  html += `<p><strong>Overall Band:</strong> ${Math.round((studentReports.reduce((sum, r) => sum + r.correct, 0) / 40) * 9 * 2) / 2}</p>`;
-
-  studentReports.forEach(report => {
-    html += `<h3>${report.part} - ${report.correct}/${report.total} (Band ${report.band})</h3>`;
-    html += `<table class="answers-table">
-      <tr><th>Question</th><th>Your Answer</th><th>Correct</th><th>Status</th></tr>`;
-
-    Object.keys(report.answers).forEach(q => {
-      const ans = report.answers[q];
-      let user = ans.user || "—";
-      let correct = Array.isArray(ans.correct) ? ans.correct.join(", ") : ans.correct || "—";
-      let status = "—";
-      let rowClass = "";
-
-      if (user !== "—") {
-        if (Array.isArray(ans.correct)) {
-          const userArr = user.split(",").map(a => a.trim().toLowerCase());
-          const correctArr = ans.correct.map(c => c.toLowerCase());
-          const isCorrect = correctArr.length === userArr.length && correctArr.every(c => userArr.includes(c));
-          status = isCorrect ? "Correct" : "Wrong";
-          rowClass = isCorrect ? "correct" : "wrong";
-        } else {
-          const isCorrect = user.trim().toLowerCase() === ans.correct.toLowerCase();
-          status = isCorrect ? "Correct" : "Wrong";
-          rowClass = isCorrect ? "correct" : "wrong";
-        }
+  db.collection("reports")
+    .where("student", "==", student)
+    .orderBy("timestamp", "asc")
+    .get()
+    .then(snapshot => {
+      if (snapshot.empty) {
+        alert("Нет данных для этого студента");
+        return;
       }
 
-      html += `
-        <tr class="${rowClass}">
-          <td>${q}</td>
-          <td>${user}</td>
-          <td>${correct}</td>
-          <td>${status}</td>
-        </tr>
-      `;
+      const modal = document.getElementById("detailsModal");
+      const title = document.getElementById("modalTitle");
+      const content = document.getElementById("modalContent");
+
+      title.innerText = `${student} - Полный отчёт`;
+
+      let html = `<p><strong>Общий балл:</strong> загружается...</p>`;
+      html += `<p><strong>Общий Band:</strong> загружается...</p>`;
+
+      let totalCorrect = 0;
+      let totalQuestions = 0;
+
+      snapshot.forEach(doc => {
+        const report = doc.data();
+        totalCorrect += report.correct;
+        totalQuestions += report.total;
+
+        html += `<h3>${report.part} - ${report.correct}/${report.total} (Band ${report.band})</h3>`;
+        html += `<table class="answers-table">
+          <tr><th>Вопрос</th><th>Ответ студента</th><th>Правильный</th><th>Статус</th></tr>`;
+
+        Object.keys(report.answers).forEach(q => {
+          const ans = report.answers[q];
+          let user = ans.user || "—";
+          let correct = Array.isArray(ans.correct) ? ans.correct.join(", ") : ans.correct || "—";
+          let status = "—";
+          let rowClass = "";
+
+          if (user !== "—") {
+            if (Array.isArray(ans.correct)) {
+              const userArr = user.split(",").map(a => a.trim().toLowerCase());
+              const correctArr = ans.correct.map(c => c.toLowerCase());
+              const isCorrect = correctArr.length === userArr.length && correctArr.every(c => userArr.includes(c));
+              status = isCorrect ? "Correct" : "Wrong";
+              rowClass = isCorrect ? "correct" : "wrong";
+            } else {
+              const isCorrect = user.trim().toLowerCase() === ans.correct.toLowerCase();
+              status = isCorrect ? "Correct" : "Wrong";
+              rowClass = isCorrect ? "correct" : "wrong";
+            }
+          }
+
+          html += `
+            <tr class="${rowClass}">
+              <td>${q}</td>
+              <td>${user}</td>
+              <td>${correct}</td>
+              <td>${status}</td>
+            </tr>
+          `;
+        });
+
+        html += `</table><hr style="margin:20px 0;">`;
+      });
+
+      html = html.replace("загружается...", `${totalCorrect} / ${totalQuestions}`);
+      html = html.replace("загружается...", Math.round((totalCorrect / totalQuestions) * 9 * 2) / 2);
+
+      content.innerHTML = html;
+      modal.style.display = "flex";
+    })
+    .catch(error => {
+      console.error("Ошибка загрузки деталей:", error);
+      alert("Не удалось загрузить детали студента");
     });
-
-    html += `</table><hr style="margin:20px 0;">`;
-  });
-
-  content.innerHTML = html;
-  document.getElementById("detailsModal").style.display = "flex";
 }
 
 function closeDetails() {
@@ -636,9 +616,20 @@ function clearAllReports() {
 }
 
 document.getElementById("confirmClearBtn").addEventListener("click", () => {
-  localStorage.removeItem("reports");
-  document.getElementById("clearConfirmModal").style.display = "none";
-  loadReports();
+  if (confirm("Ты уверен? Это удалит ВСЕ результаты студентов из облака!")) {
+    db.collection("reports").get().then(snapshot => {
+      const batch = db.batch();
+      snapshot.forEach(doc => batch.delete(doc.ref));
+      batch.commit().then(() => {
+        alert("Все результаты удалены");
+        document.getElementById("clearConfirmModal").style.display = "none";
+        loadReports();
+      }).catch(error => {
+        console.error("Ошибка удаления:", error);
+        alert("Ошибка при удалении");
+      });
+    });
+  }
 });
 
 window.onload = function() {
