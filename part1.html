@@ -53,12 +53,14 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 25px;
+      gap: 15px;
+      flex-wrap: wrap;
     }
 
     .header-right label {
       font-size: 15px;
       font-weight: 500;
+      color: white;
     }
 
     #takerName {
@@ -68,8 +70,9 @@
       background: rgba(255,255,255,0.15);
       color: white;
       font-size: 15px;
-      width: 220px;
-      transition: all 0.3s;
+      min-width: 180px;
+      max-width: 300px;
+      flex: 1;
     }
 
     #takerName:focus {
@@ -139,7 +142,6 @@
 
     tr:hover td {
       background: #fff8e1;
-      transition: background 0.2s;
     }
 
     input[type="text"] {
@@ -148,20 +150,16 @@
       border: 1px solid #ddd;
       border-radius: 6px;
       font-size: 15px;
-      transition: all 0.2s;
-    }
-
-    input[type="text"]:focus {
-      outline: none;
-      border-color: #a81011;
-      box-shadow: 0 0 0 3px rgba(168,16,17,0.25);
     }
 
     .part-buttons {
       text-align: center;
       margin: 50px 0;
+      display: flex;
+      justify-content: center;
     }
 
+    .part-buttons button,
     .part-buttons a button {
       padding: 16px 50px;
       background: #a81011;
@@ -175,27 +173,14 @@
       box-shadow: 0 4px 15px rgba(168,16,17,0.3);
     }
 
+    .part-buttons button:hover,
     .part-buttons a button:hover {
       background: #870d0e;
       transform: translateY(-3px);
       box-shadow: 0 12px 30px rgba(168,16,17,0.4);
     }
 
-    #resultMessage {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 25px;
-      background: #e6f4ea;
-      color: #155724;
-      border-radius: 12px;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      display: none;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      border: 2px solid #28a745;
-    }
-
+    /* Контекстное меню */
     #contextMenu {
       position: absolute;
       display: none;
@@ -226,6 +211,97 @@
       background-color: #fff176;
       padding: 2px 4px;
       border-radius: 3px;
+    }
+
+    /* Мобильная версия */
+    @media (max-width: 768px) {
+      body {
+        font-size: 15px;
+      }
+
+      .header-panel {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .header-center {
+        font-size: 18px;
+        text-align: center;
+        flex: 1 1 100%;
+      }
+
+      .header-right {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+      }
+
+      #takerName {
+        width: 100%;
+      }
+
+      .full-audio {
+        width: 180px;
+        height: 35px;
+      }
+
+      .main-content {
+        padding: 0 15px;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .table-wrapper {
+        overflow-x: auto;
+      }
+
+      table {
+        min-width: 600px;
+      }
+
+      th, td {
+        padding: 12px 10px;
+        font-size: 14px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        font-size: 15px;
+      }
+
+      .part-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .part-buttons button,
+      .part-buttons a button {
+        padding: 14px 40px;
+        font-size: 16px;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 22px;
+      }
+
+      table {
+        min-width: 500px;
+      }
+
+      th, td {
+        padding: 10px 8px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
@@ -286,14 +362,14 @@
   </div>
 
   <div class="part-buttons">
-    <a href="part2.html" onclick="saveName(); saveAnswers(); checkPart1();"><button>➡ Part 2</button></a>
+    <button onclick="saveName(); saveAnswers(); checkPart1();">
+      ➡ Part 2
+    </button>
   </div>
-
-  <div id="resultMessage"></div>
 </div>
 
 <script>
-// Prevent audio seeking backwards
+// Запрет перемотки аудио назад
 const audio = document.getElementById("examAudio");
 let lastTime = 0;
 audio.addEventListener("timeupdate", () => { lastTime = Math.max(lastTime, audio.currentTime); });
@@ -301,7 +377,7 @@ audio.addEventListener("seeking", () => {
   if (audio.currentTime < lastTime) audio.currentTime = lastTime;
 });
 
-// Context menu + highlight
+// Контекстное меню + подсветка
 document.addEventListener("contextmenu", e => {
   e.preventDefault();
   const menu = document.getElementById("contextMenu");
@@ -317,12 +393,18 @@ function highlightSelection() {
     const range = selection.getRangeAt(0);
     const span = document.createElement("span");
     span.className = "highlighted";
-    range.surroundContents(span);
+    try {
+      range.surroundContents(span);
+    } catch (e) {
+      const fragment = range.extractContents();
+      span.appendChild(fragment);
+      range.insertNode(span);
+    }
     selection.removeAllRanges();
   }
 }
 
-// Correct answers
+// Правильные ответы
 const correctAnswersPart1 = {
   q1: "fish",
   q2: "roof",
@@ -376,14 +458,8 @@ function checkPart1() {
 
   saveReport(report);
 
-  const msg = document.getElementById("resultMessage");
-  msg.innerHTML = `Part 1 Result: ${score} out of ${total} (Band ≈ ${band})<br>Well done! Moving to Part 2...`;
-  msg.style.display = "block";
-
-  setTimeout(() => {
-    msg.style.display = "none";
-    window.location.href = "part2.html";
-  }, 4000);
+  // Прямой переход без сообщения
+  window.location.href = "part2.html";
 }
 
 function saveReport(newReport) {

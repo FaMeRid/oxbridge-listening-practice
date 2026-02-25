@@ -84,6 +84,11 @@
       padding: 20px;
     }
 
+    .question-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
     .question-card li {
       margin: 15px 0;
       font-size: 17px;
@@ -214,6 +219,109 @@
       padding: 2px 4px;
       border-radius: 3px;
     }
+
+    /* Мобильная версия (экраны меньше 768px) */
+    @media (max-width: 768px) {
+      body {
+        font-size: 15px;
+      }
+
+      .header-panel {
+        padding: 10px 15px;
+        min-height: 60px;
+      }
+
+      .header-center {
+        font-size: 18px;
+      }
+
+      .logo {
+        height: 40px;
+      }
+
+      .full-audio {
+        width: 180px;
+        height: 35px;
+      }
+
+      .main-content {
+        padding: 0 15px;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .question-card {
+        padding: 15px;
+        margin: 15px 0;
+      }
+
+      .question-card li {
+        font-size: 16px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        margin: 8px 0;
+        font-size: 16px;
+      }
+
+      .part-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .part-buttons button,
+      .part-buttons a button {
+        padding: 14px 40px;
+        font-size: 16px;
+        width: 100%;
+      }
+
+      .modal-content {
+        padding: 25px;
+        width: 95%;
+      }
+
+      .modal-content h2 {
+        font-size: 24px;
+      }
+
+      .modal-content p {
+        font-size: 17px;
+      }
+
+      .highlight-score {
+        font-size: 20px;
+      }
+
+      .modal-actions button {
+        padding: 12px 30px;
+        font-size: 16px;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 22px;
+      }
+
+      .question-card li {
+        font-size: 15px;
+      }
+
+      .part-buttons button,
+      .part-buttons a button {
+        padding: 12px 30px;
+        font-size: 15px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -285,7 +393,7 @@ audio.addEventListener("seeking", () => {
   if (audio.currentTime < lastTime) audio.currentTime = lastTime;
 });
 
-// Контекстное меню + подсветка
+// Контекстное меню + подсветка (безопасная версия)
 document.addEventListener("contextmenu", e => {
   e.preventDefault();
   const menu = document.getElementById("contextMenu");
@@ -297,13 +405,21 @@ document.addEventListener("click", () => document.getElementById("contextMenu").
 
 function highlightSelection() {
   const selection = window.getSelection();
-  if (selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-    const span = document.createElement("span");
-    span.className = "highlighted";
+  if (selection.rangeCount === 0 || selection.isCollapsed) return;
+
+  const range = selection.getRangeAt(0);
+  const span = document.createElement("span");
+  span.className = "highlighted";
+
+  try {
     range.surroundContents(span);
-    selection.removeAllRanges();
+  } catch (e) {
+    const fragment = range.extractContents();
+    span.appendChild(fragment);
+    range.insertNode(span);
   }
+
+  selection.removeAllRanges();
 }
 
 // Правильные ответы для Part 4

@@ -134,21 +134,7 @@
       box-shadow: 0 12px 30px rgba(168,16,17,0.4);
     }
 
-    #resultMessage {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 25px;
-      background: #e6f4ea;
-      color: #155724;
-      border-radius: 12px;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      display: none;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      border: 2px solid #28a745;
-    }
-
+    /* Контекстное меню */
     #contextMenu {
       position: absolute;
       display: none;
@@ -179,6 +165,82 @@
       background-color: #fff176;
       padding: 2px 4px;
       border-radius: 3px;
+    }
+
+    /* Мобильная версия */
+    @media (max-width: 768px) {
+      body {
+        font-size: 15px;
+      }
+
+      .header-panel {
+        padding: 10px 15px;
+        min-height: 60px;
+      }
+
+      .header-center {
+        font-size: 18px;
+      }
+
+      .logo {
+        height: 40px;
+      }
+
+      .full-audio {
+        width: 180px;
+        height: 35px;
+      }
+
+      .main-content {
+        padding: 0 15px;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .question-card {
+        padding: 15px;
+        margin: 15px 0;
+      }
+
+      label {
+        font-size: 15px;
+        margin: 10px 0;
+      }
+
+      input[type="radio"],
+      input[type="checkbox"] {
+        transform: scale(1.2);
+      }
+
+      .part-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .part-buttons button,
+      .part-buttons a button {
+        padding: 14px 40px;
+        font-size: 16px;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 22px;
+      }
+
+      .part-buttons button,
+      .part-buttons a button {
+        padding: 12px 30px;
+        font-size: 15px;
+      }
     }
   </style>
 </head>
@@ -273,15 +335,17 @@
   </div>
 
   <div class="part-buttons">
-    <a href="part1.html" onclick="saveAnswers(); checkPart2();"><button>← Part 1</button></a>
-    <a href="part3.html" onclick="saveAnswers(); checkPart2();"><button>Part 3 →</button></a>
+    <a href="part1.html" onclick="saveAnswers();">
+      <button>← Part 1</button>
+    </a>
+    <button onclick="saveAnswers(); checkPart2();">
+      Part 3 →
+    </button>
   </div>
-
-  <div id="resultMessage"></div>
 </div>
 
 <script>
-// Prevent audio seeking backwards
+// Запрет перемотки аудио назад
 const audio = document.getElementById("examAudio");
 let lastTime = 0;
 audio.addEventListener("timeupdate", () => { lastTime = Math.max(lastTime, audio.currentTime); });
@@ -289,7 +353,7 @@ audio.addEventListener("seeking", () => {
   if (audio.currentTime < lastTime) audio.currentTime = lastTime;
 });
 
-// Context menu + highlight
+// Контекстное меню + подсветка (безопасная версия)
 document.addEventListener("contextmenu", e => {
   e.preventDefault();
   const menu = document.getElementById("contextMenu");
@@ -301,23 +365,31 @@ document.addEventListener("click", () => document.getElementById("contextMenu").
 
 function highlightSelection() {
   const selection = window.getSelection();
-  if (selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-    const span = document.createElement("span");
-    span.className = "highlighted";
+  if (selection.rangeCount === 0 || selection.isCollapsed) return;
+
+  const range = selection.getRangeAt(0);
+  const span = document.createElement("span");
+  span.className = "highlighted";
+
+  try {
     range.surroundContents(span);
-    selection.removeAllRanges();
+  } catch (e) {
+    const fragment = range.extractContents();
+    span.appendChild(fragment);
+    range.insertNode(span);
   }
+
+  selection.removeAllRanges();
 }
 
-// Correct answers (Cambridge IELTS 20 Test 1 Section 2)
+// Правильные ответы (Cambridge IELTS 20 Test 1 Section 2)
 const correctAnswers = {
-  q11: "C",  // make something that will outlive them
-  q12: "A",  // it lasts longer in the ground
-  q13: "C",  // the marks that are on it
-  q14: "A",  // its calming effect
-  q15: "B",  // have never made a pot before
-  q16: "C",  // take off their jewellery
+  q11: "C",
+  q12: "A",
+  q13: "C",
+  q14: "A",
+  q15: "B",
+  q16: "C",
   q17_18: ["A", "E"],
   q19_20: ["C", "E"]
 };
@@ -334,12 +406,11 @@ function checkPart2() {
     const key = `q${i}`;
     const selected = document.querySelector(`input[name="${key}"]:checked`);
     const user = selected ? selected.value : "";
-    const correct = correctAnswers[key];
-    answers[key] = { user, correct };
-    if (user === correct) score++;
+    answers[key] = { user, correct: correctAnswers[key] };
+    if (user === correctAnswers[key]) score++;
   }
 
-  // Checkboxes 17–18 and 19–20
+  // Checkboxes 17–18 и 19–20
   const pairs = [
     { name: "q17_18", correct: correctAnswers.q17_18 },
     { name: "q19_20", correct: correctAnswers.q19_20 }
@@ -349,13 +420,10 @@ function checkPart2() {
     const checked = Array.from(document.querySelectorAll(`input[name="${pair.name}"]:checked`))
       .map(inp => inp.value);
     const user = checked.join(", ");
-    const correct = pair.correct.join(", ");
-    answers[pair.name] = { user, correct };
+    answers[pair.name] = { user, correct: pair.correct.join(", ") };
 
-    if (checked.length === pair.correct.length) {
-      pair.correct.forEach(c => {
-        if (checked.includes(c)) score++;
-      });
+    if (checked.length === pair.correct.length && pair.correct.every(c => checked.includes(c))) {
+      score += pair.correct.length;
     }
   });
 
@@ -373,14 +441,8 @@ function checkPart2() {
 
   saveReport(report);
 
-  const msg = document.getElementById("resultMessage");
-  msg.innerHTML = `Part 2 Result: ${score} out of ${total} (Band ≈ ${band})<br>Great job! Moving to Part 3...`;
-  msg.style.display = "block";
-
-  setTimeout(() => {
-    msg.style.display = "none";
-    window.location.href = "part3.html";
-  }, 4000);
+  // Прямой переход без сообщения
+  window.location.href = "part3.html";
 }
 
 function saveReport(newReport) {

@@ -22,6 +22,7 @@
       background: var(--light);
       color: #333;
       min-height: 100vh;
+      font-size: 16px;
     }
 
     .header-panel {
@@ -34,8 +35,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 30px;
+      padding: 12px 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .logo {
@@ -46,7 +49,7 @@
     .header-center {
       flex: 1;
       text-align: center;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: bold;
     }
 
@@ -68,18 +71,19 @@
     .main-content {
       max-width: 1200px;
       margin: 40px auto;
-      padding: 0 20px;
+      padding: 0 15px;
     }
 
     h1 {
       text-align: center;
       color: var(--primary);
       margin-bottom: 30px;
+      font-size: 28px;
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
       margin-bottom: 40px;
     }
@@ -87,7 +91,7 @@
     .stat-card {
       background: white;
       border-radius: 12px;
-      padding: 25px;
+      padding: 20px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.08);
       text-align: center;
       transition: transform 0.3s;
@@ -95,20 +99,18 @@
 
     .stat-card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
     }
 
     .stat-card h3 {
       color: var(--primary);
       margin: 0 0 12px;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .stat-card p {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: bold;
       margin: 0;
-      color: #333;
     }
 
     table {
@@ -121,9 +123,10 @@
     }
 
     th, td {
-      padding: 16px;
+      padding: 14px;
       text-align: left;
       border-bottom: 1px solid #eee;
+      font-size: 15px;
     }
 
     th {
@@ -131,7 +134,7 @@
       color: white;
       font-weight: bold;
       text-transform: uppercase;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     tr:hover {
@@ -155,9 +158,9 @@
 
     .modal-content, .confirm-modal-content {
       background: white;
-      padding: 35px;
+      padding: 30px;
       border-radius: 12px;
-      max-width: 1000px;
+      max-width: 95%;
       width: 95%;
       max-height: 90vh;
       overflow-y: auto;
@@ -184,8 +187,9 @@
 
     .answers-table th, .answers-table td {
       border: 1px solid #ddd;
-      padding: 12px;
+      padding: 10px;
       text-align: center;
+      font-size: 14px;
     }
 
     .answers-table th {
@@ -208,26 +212,29 @@
 
     #loginBox {
       background: white;
-      padding: 40px;
+      padding: 30px 20px;
       border-radius: 12px;
-      width: 380px;
+      width: 90%;
+      max-width: 380px;
       text-align: center;
       box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-      animation: fadeIn 0.6s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+    #loginBox img {
+      width: 120px;
+      margin-bottom: 20px;
     }
 
-    #loginBox img { width: 140px; margin-bottom: 25px; }
-    #loginBox h3 { color: var(--primary); margin-bottom: 25px; font-size: 24px; }
+    #loginBox h3 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
 
     .input-group {
       display: flex;
       align-items: center;
-      margin: 15px 0;
+      margin: 12px 0;
       border: 1px solid #ddd;
       border-radius: 6px;
       overflow: hidden;
@@ -257,8 +264,7 @@
       font-size: 17px;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 20px;
-      transition: all 0.3s;
+      margin-top: 15px;
     }
 
     #loginBtn:hover { background: var(--primary-dark); }
@@ -267,25 +273,125 @@
 
     .confirm-buttons {
       display: flex;
-      gap: 20px;
+      gap: 15px;
       justify-content: center;
-      margin-top: 30px;
+      margin-top: 25px;
+      flex-wrap: wrap;
     }
 
     .confirm-btn {
-      padding: 14px 35px;
+      padding: 12px 30px;
       border: none;
       border-radius: 50px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s;
+      min-width: 120px;
     }
 
     .cancel-btn { background: #6c757d; color: white; }
     .delete-btn { background: var(--danger); color: white; }
 
     .confirm-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    /* Мобильная версия */
+    @media (max-width: 768px) {
+      body {
+        font-size: 15px;
+      }
+
+      .header-panel {
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .header-center {
+        font-size: 20px;
+        flex: 1 1 100%;
+        text-align: center;
+      }
+
+      .logo {
+        height: 40px;
+      }
+
+      .logout-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+
+      .main-content {
+        padding: 0 15px;
+        margin: 20px auto;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+
+      .stat-card {
+        padding: 15px;
+      }
+
+      .stat-card p {
+        font-size: 24px;
+      }
+
+      table {
+        font-size: 14px;
+      }
+
+      th, td {
+        padding: 12px 10px;
+      }
+
+      .modal-content, .confirm-modal-content {
+        padding: 20px;
+        width: 95%;
+      }
+
+      .modal-content h2 {
+        font-size: 22px;
+      }
+
+      .confirm-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .confirm-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      .stat-card h3 {
+        font-size: 15px;
+      }
+
+      .stat-card p {
+        font-size: 22px;
+      }
+
+      table {
+        font-size: 13px;
+      }
+
+      th, td {
+        padding: 10px 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -332,18 +438,20 @@
   </div>
 
   <h1>All Student Results</h1>
-  <table id="reportsTable">
-    <thead>
-      <tr>
-        <th>Student</th>
-        <th>Total Score</th>
-        <th>Band</th>
-        <th>Last Report Date</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody id="reportsBody"></tbody>
-  </table>
+  <div style="overflow-x: auto;">
+    <table id="reportsTable">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Total Score</th>
+          <th>Band</th>
+          <th>Last Report Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="reportsBody"></tbody>
+    </table>
+  </div>
 
   <div style="text-align:center; margin:40px 0;">
     <button onclick="clearAllReports()" style="padding:14px 40px; background:var(--danger); color:white; border:none; border-radius:50px; font-size:17px; cursor:pointer;">
@@ -516,7 +624,7 @@ function showStudentDetails(student) {
   });
 
   content.innerHTML = html;
-  modal.style.display = "flex";
+  document.getElementById("detailsModal").style.display = "flex";
 }
 
 function closeDetails() {
@@ -527,7 +635,6 @@ function clearAllReports() {
   document.getElementById("clearConfirmModal").style.display = "flex";
 }
 
-// Confirm clear
 document.getElementById("confirmClearBtn").addEventListener("click", () => {
   localStorage.removeItem("reports");
   document.getElementById("clearConfirmModal").style.display = "none";
@@ -537,7 +644,7 @@ document.getElementById("confirmClearBtn").addEventListener("click", () => {
 window.onload = function() {
   const savedPass = localStorage.getItem("teacherPass");
   if (savedPass) {
-    document.getElementById("login").value = "admin";
+    document.getElementById("login").value = "Shohruh";
     document.getElementById("password").value = savedPass;
     checkLogin();
   }

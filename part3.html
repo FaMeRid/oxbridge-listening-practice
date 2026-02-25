@@ -140,6 +140,7 @@
       box-shadow: 0 12px 30px rgba(168,16,17,0.4);
     }
 
+    /* Контекстное меню */
     #contextMenu {
       position: absolute;
       display: none;
@@ -170,6 +171,82 @@
       background-color: #fff176;
       padding: 2px 4px;
       border-radius: 3px;
+    }
+
+    /* Мобильная версия (экраны меньше 768px) */
+    @media (max-width: 768px) {
+      body {
+        font-size: 15px;
+      }
+
+      .header-panel {
+        padding: 10px 15px;
+        min-height: 60px;
+      }
+
+      .header-center {
+        font-size: 18px;
+      }
+
+      .logo {
+        height: 40px;
+      }
+
+      .full-audio {
+        width: 180px;
+        height: 35px;
+      }
+
+      .main-content {
+        padding: 0 15px;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .question-card {
+        padding: 15px;
+        margin: 15px 0;
+      }
+
+      label {
+        font-size: 15px;
+        margin: 10px 0;
+      }
+
+      input[type="radio"],
+      input[type="checkbox"] {
+        transform: scale(1.2);
+      }
+
+      .part-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .part-buttons button,
+      .part-buttons a button {
+        padding: 14px 40px;
+        font-size: 16px;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 22px;
+      }
+
+      .part-buttons button,
+      .part-buttons a button {
+        padding: 12px 30px;
+        font-size: 15px;
+      }
     }
   </style>
 </head>
@@ -277,7 +354,7 @@ audio.addEventListener("seeking", () => {
   if (audio.currentTime < lastTime) audio.currentTime = lastTime;
 });
 
-// Контекстное меню + подсветка
+// Контекстное меню + подсветка (безопасная версия)
 document.addEventListener("contextmenu", e => {
   e.preventDefault();
   const menu = document.getElementById("contextMenu");
@@ -292,23 +369,17 @@ function highlightSelection() {
   if (selection.rangeCount === 0 || selection.isCollapsed) return;
 
   const range = selection.getRangeAt(0);
-  if (range.collapsed) return;
-
-  // Создаём новый span для выделения
   const span = document.createElement("span");
   span.className = "highlighted";
 
   try {
-    // Безопасный способ: оборачиваем содержимое
     range.surroundContents(span);
   } catch (e) {
-    // Если ошибка (Bad Boundary) — обходим через extractContents + insertNode
     const fragment = range.extractContents();
     span.appendChild(fragment);
     range.insertNode(span);
   }
 
-  // Очищаем выделение после
   selection.removeAllRanges();
 }
 
