@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oxbridge • IELTS Listening Mastery</title>
+  <style>
+    :root {
+      --primary: #a81011;
+      --primary-dark: #870d0e;
+      --gold: #ffd700;
+      --light: #f8f8f8;
+      --gray: #444;
+      --dark: #111;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* Хеддер */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(168,16,17,0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 5%;
+      z-index: 1000;
+      transition: all 0.4s ease;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+    }
+
+    header.scrolled {
+      padding: 10px 5%;
+      background: rgba(168,16,17,0.98);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+    }
+
+    .logo {
+      height: 55px;
+      cursor: pointer;
+      transition: transform 0.4s;
+    }
+
+    .logo:hover {
+      transform: scale(1.08);
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-btn {
+      padding: 10px 24px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background: transparent;
+      border: 2px solid white;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .nav-btn.primary {
+      background: white;
+      color: var(--primary);
+      border-color: white;
+    }
+
+    .nav-btn:hover {
+      background: white;
+      color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 140px 5% 0;           /* отступ сверху под хеддер */
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      z-index: -2;
+      animation: subtleZoom 60s ease-in-out infinite;
+    }
+
+    @keyframes subtleZoom {
+      0%   { transform: scale(1.05) translate(0, 0); }
+      50%  { transform: scale(1.1) translate(1%, 0.5%); }
+      100% { transform: scale(1.05) translate(0, 0); }
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(168,16,17,0.72), rgba(135,13,14,0.82));
+      background-size: 300% 300%;
+      z-index: -1;
+      animation: gradientBreathe 45s ease infinite;
+      opacity: 0.85;
+    }
+
+    @keyframes gradientBreathe {
+      0%, 100% { background-position: 0% 50%; opacity: 0.85; }
+      50%      { background-position: 100% 50%; opacity: 0.92; }
+    }
+
+    .hero-logo {
+      width: 320px;
+      margin-bottom: 50px;
+      filter: drop-shadow(0 10px 40px rgba(0,0,0,0.6));
+    }
+
+    .hero h1 {
+      font-size: clamp(4rem, 10vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -2px;
+      margin-bottom: 30px;
+      text-shadow: 0 5px 30px rgba(0,0,0,0.7);
+    }
+
+    .hero p {
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      max-width: 900px;
+      margin-bottom: 60px;
+      opacity: 0.95;
+    }
+
+    .start-btn-hero {
+      padding: 20px 80px;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 8px 25px rgba(168,16,17,0.4);
+    }
+
+    .start-btn-hero:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(168,16,17,0.5);
+    }
+
+    /* Плавный переход от hero к features */
+.hero-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 220px;               /* подбери 180–280px под свой вкус */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(248, 248, 248, 0.35) 25%,
+    #f8f8f8 60%,
+    #f8f8f8 100%
+  );
+  pointer-events: none;
+  z-index: 2;                  /* выше оверлея и контента hero */
+}
+
+    /* Features */
+    .features {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 40px;
+      max-width: 1200px;
+      margin: -80px auto 80px;          /* отрицательный отступ для перекрытия hero */
+      padding: 0 5%;
+      z-index: 3;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 16px;
+      padding: 50px 35px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: all 0.5s;
+      border: 1px solid rgba(168,16,17,0.1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-16px);
+      box-shadow: 0 30px 70px rgba(168,16,17,0.2);
+      border-color: var(--gold);
+    }
+
+    .feature-icon {
+      font-size: 4.5rem;
+      color: var(--primary);
+      margin-bottom: 30px;
+      transition: transform 0.5s;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.15);
+    }
+
+    .feature-card h3 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-card p {
+      color: var(--gray);
+      font-size: 1.15rem;
+    }
+
+    /* Футер */
+    footer {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 80px 20px 40px;
+      margin-top: 120px;
+    }
+
+    footer .logo-footer {
+      height: 90px;
+      margin-bottom: 40px;
+      filter: brightness(1.2);
+    }
+
+    footer p {
+      font-size: 1.1rem;
+      margin: 15px 0;
+    }
+
+    footer a {
+      color: #ff9999;
+      text-decoration: none;
+      margin: 0 20px;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    /* Адаптив */
+    @media (max-width: 768px) {
+      .hero { padding: 120px 15px 0; min-height: 90vh; }
+      .hero-logo { width: 240px; }
+      .hero h1 { font-size: 3.8rem; }
+      .hero p { font-size: 1.4rem; }
+      .start-btn-hero { padding: 18px 60px; font-size: 1.6rem; }
+      .features { gap: 30px; margin: 60px auto; }
+      .nav-right { gap: 12px; }
+      .nav-btn { padding: 8px 16px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
+  <div class="nav-right">
+    <a href="part1.html" class="nav-btn primary">Start Test</a>
+    <a href="teacher.html" class="nav-btn">Teacher Area</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+
+  <img src="assets/logo.png" alt="Oxbridge Logo" class="hero-logo">
+  <h1>Oxbridge IELTS Listening</h1>
+  <p>Real exam simulation • 4 full parts • Instant band score • Premium feedback & teacher monitoring</p>
+  <a href="part1.html" class="start-btn-hero">Begin Your Test</a>
+  <!-- Плавный переход -->
+  <div class="hero-fade"></div>
+</div>
+
+<div class="features">
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fas fa-headphones"></i></div>
+    <h3>Authentic Audio</h3>
+    <p>Real IELTS recordings from Cambridge materials</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+    <h3>Instant Scoring</h3>
+    <p>Accurate band calculation after every part</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
+    <h3>Detailed Feedback</h3>
+    <p>See correct answers and learn from mistakes</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon"><i class="fas fa-user-shield"></i></div>
+    <h3>Teacher Access</h3>
+    <p>Monitor student progress and detailed reports</p>
+  </div>
+</div>
+
+<footer>
+  <img src="assets/logo.png" alt="Oxbridge Logo" class="logo-footer">
+  <p>Oxbridge.uz — Premium IELTS Preparation Platform</p>
+  <p>
+    <a href="#">About</a> •
+    <a href="#">Contact</a> •
+    <a href="#">Privacy Policy</a> •
+    <a href="teacher.html">Teacher Area</a>
+  </p>
+</footer>
+
+<script>
+window.addEventListener("scroll", () => {
+  document.querySelector("header").classList.toggle("scrolled", window.scrollY > 100);
+});
+
+document.getElementById("logo").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>

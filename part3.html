@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Listening Practice - Part 3</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f8f8f8;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .header-panel {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 30px;
+      box-sizing: border-box;
+      min-height: 80px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .logo {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .header-center {
+      flex: 1;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .full-audio {
+      width: 260px;
+      height: 40px;
+    }
+
+    .main-content {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .title {
+      text-align: center;
+      color: #a81011;
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #444;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .question-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      margin: 20px 0;
+      padding: 20px;
+    }
+
+    .question-card h3 {
+      margin-top: 0;
+      color: #a81011;
+      font-size: 20px;
+    }
+
+    /* Для вопросов 27–30 делаем заголовки обычными (не красными) */
+    .question-card.normal h3 {
+      color: #333;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.3);
+      accent-color: #a81011;
+    }
+
+    .part-buttons {
+      text-align: center;
+      margin: 50px 0;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .part-buttons button,
+    .part-buttons a button {
+      padding: 16px 50px;
+      background: #a81011;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(168,16,17,0.3);
+    }
+
+    .part-buttons button:hover,
+    .part-buttons a button:hover {
+      background: #870d0e;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(168,16,17,0.4);
+    }
+
+    #resultMessage {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 25px;
+      background: #e6f4ea;
+      color: #155724;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      border: 2px solid #28a745;
+    }
+
+    #contextMenu {
+      position: absolute;
+      display: none;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      z-index: 5000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 5px 0;
+    }
+
+    #contextMenu button {
+      display: block;
+      width: 100%;
+      padding: 10px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    #contextMenu button:hover {
+      background: #f5f5f5;
+    }
+
+    .highlighted {
+      background-color: #fff176;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="contextMenu"><button onclick="highlightSelection()">✨ Highlight</button></div>
+
+<div class="header-panel">
+  <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
+  <div class="header-center">
+    IELTS Listening Practice - Part 3
+  </div>
+  <audio id="examAudio" controls class="full-audio">
+    <source src="sounds/listening1.1/part3.mp3" type="audio/mpeg">
+    Your browser does not support audio.
+  </audio>
+</div>
+
+<div class="main-content">
+  <div class="title">
+    Part 3: Questions 21–30
+  </div>
+  <div class="subtitle">
+    <strong>Choose the correct letter, A, B or C.</strong>
+  </div>
+
+  <!-- Questions 21-22 -->
+  <div class="question-card">
+    <h3>Questions 21 and 22</h3>
+    <p><strong>Choose TWO letters, A–E.</strong></p>
+    <p>Which TWO things do the students both believe are responsible for the increase in loneliness?</p>
+    <label><input type="checkbox" name="q21_22" value="A"> A. Social media</label>
+    <label><input type="checkbox" name="q21_22" value="B"> B. Smaller nuclear families</label>
+    <label><input type="checkbox" name="q21_22" value="C"> C. Urban design</label>
+    <label><input type="checkbox" name="q21_22" value="D"> D. Longer lifespans</label>
+    <label><input type="checkbox" name="q21_22" value="E"> E. A mobile workforce</label>
+  </div>
+
+  <!-- Questions 23-24 -->
+  <div class="question-card">
+    <h3>Questions 23 and 24</h3>
+    <p><strong>Choose TWO letters, A–E.</strong></p>
+    <p>Which TWO health risks associated with loneliness do the students agree are based on solid evidence?</p>
+    <label><input type="checkbox" name="q23_24" value="A"> A. A weakened immune system</label>
+    <label><input type="checkbox" name="q23_24" value="B"> B. Dementia</label>
+    <label><input type="checkbox" name="q23_24" value="C"> C. Cancer</label>
+    <label><input type="checkbox" name="q23_24" value="D"> D. Obesity</label>
+    <label><input type="checkbox" name="q23_24" value="E"> E. Cardiovascular disease</label>
+  </div>
+
+  <!-- Questions 25-26 -->
+  <div class="question-card">
+    <h3>Questions 25 and 26</h3>
+    <p><strong>Choose TWO letters, A–E.</strong></p>
+    <p>Which TWO opinions do both the students express about the evolutionary theory of loneliness?</p>
+    <label><input type="checkbox" name="q25_26" value="A"> A. It has little practical relevance</label>
+    <label><input type="checkbox" name="q25_26" value="B"> B. It needs further investigation</label>
+    <label><input type="checkbox" name="q25_26" value="C"> C. It is misleading</label>
+    <label><input type="checkbox" name="q25_26" value="D"> D. It should be more widely accepted</label>
+    <label><input type="checkbox" name="q25_26" value="E"> E. It is difficult to understand</label>
+  </div>
+
+  <!-- Questions 27–30 (заголовки обычные, не красные) -->
+  <div class="question-card">
+    <h3>Questions 27–30</h3>
+    <p><strong>Choose the correct letter, A, B or C.</strong></p>
+
+    <h3>27. When comparing loneliness to depression, the students</h3>
+    <label><input type="radio" name="q27" value="A"> A. Doubt that there will ever be a medical cure for loneliness</label>
+    <label><input type="radio" name="q27" value="B"> B. Claim that the link between loneliness and mental health is overstated</label>
+    <label><input type="radio" name="q27" value="C"> C. Express frustration that loneliness is not taken more seriously</label>
+
+    <h3>28. Why do the students decide to start their presentation with an example from their own experience?</h3>
+    <label><input type="radio" name="q28" value="A"> A. To explain how difficult loneliness can be</label>
+    <label><input type="radio" name="q28" value="B"> B. To highlight a situation that most students will recognise</label>
+    <label><input type="radio" name="q28" value="C"> C. To emphasise that feeling lonely is more common for men than women</label>
+
+    <h3>29. The students agree that talking to strangers is a good strategy for dealing with loneliness because</h3>
+    <label><input type="radio" name="q29" value="A"> A. It creates a sense of belonging</label>
+    <label><input type="radio" name="q29" value="B"> B. It builds self-confidence</label>
+    <label><input type="radio" name="q29" value="C"> C. It makes people feel more positive</label>
+
+    <h3>30. The students find it difficult to understand why solitude is considered to be</h3>
+    <label><input type="radio" name="q30" value="A"> A. Similar to loneliness</label>
+    <label><input type="radio" name="q30" value="B"> B. Necessary for mental health</label>
+    <label><input type="radio" name="q30" value="C"> C. An enjoyable experience</label>
+  </div>
+
+  <div class="part-buttons">
+    <a href="part2.html" onclick="saveAnswers(); checkPart3();"><button>← Part 2</button></a>
+    <a href="part4.html" onclick="saveAnswers(); checkPart3();"><button>Part 4 →</button></a>
+  </div>
+
+  <div id="resultMessage"></div>
+</div>
+
+<script>
+// Запрет перемотки аудио назад
+const audio = document.getElementById("examAudio");
+let lastTime = 0;
+audio.addEventListener("timeupdate", () => { lastTime = Math.max(lastTime, audio.currentTime); });
+audio.addEventListener("seeking", () => {
+  if (audio.currentTime < lastTime) audio.currentTime = lastTime;
+});
+
+// Контекстное меню + подсветка
+document.addEventListener("contextmenu", e => {
+  e.preventDefault();
+  const menu = document.getElementById("contextMenu");
+  menu.style.top = `${e.pageY}px`;
+  menu.style.left = `${e.pageX}px`;
+  menu.style.display = "block";
+});
+document.addEventListener("click", () => document.getElementById("contextMenu").style.display = "none");
+
+function highlightSelection() {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const span = document.createElement("span");
+    span.className = "highlighted";
+    range.surroundContents(span);
+    selection.removeAllRanges();
+  }
+}
+
+// Правильные ответы (как ты указал)
+const correctAnswers = {
+  q21_22: ["C", "E"],
+  q23_24: ["A", "C"],
+  q25_26: ["A", "B"],
+  q27: "A",
+  q28: "B",
+  q29: "A",
+  q30: "C"
+};
+
+function checkPart3() {
+  const takerName = localStorage.getItem("takerName") || "Anonymous";
+
+  let score = 0;
+  let total = 10;
+  let answers = {};
+
+  // Checkboxes 21–22, 23–24, 25–26
+  const checkboxPairs = [
+    { name: "q21_22", correct: correctAnswers.q21_22 },
+    { name: "q23_24", correct: correctAnswers.q23_24 },
+    { name: "q25_26", correct: correctAnswers.q25_26 }
+  ];
+
+  checkboxPairs.forEach(pair => {
+    const checked = Array.from(document.querySelectorAll(`input[name="${pair.name}"]:checked`))
+      .map(inp => inp.value);
+    const user = checked.join(", ");
+    const correct = pair.correct.join(", ");
+    answers[pair.name] = { user, correct };
+
+    if (checked.length === pair.correct.length) {
+      pair.correct.forEach(c => {
+        if (checked.includes(c)) score++;
+      });
+    }
+  });
+
+  // Radio 27–30
+  for (let i = 27; i <= 30; i++) {
+    const key = `q${i}`;
+    const selected = document.querySelector(`input[name="${key}"]:checked`);
+    const user = selected ? selected.value : "";
+    const correct = correctAnswers[key];
+    answers[key] = { user, correct };
+    if (user === correct) score++;
+  }
+
+  const band = Math.round((score / total) * 9 * 2) / 2;
+
+  const report = {
+    part: "Part 3",
+    student: takerName,
+    correct: score,
+    total: total,
+    band: band,
+    date: new Date().toLocaleString("en-US"),
+    answers: answers
+  };
+
+  saveReport(report);
+
+  const msg = document.getElementById("resultMessage");
+  msg.innerHTML = `Part 3 Result: ${score} out of ${total} (Band ≈ ${band})<br>Excellent! Moving to Part 4...`;
+  msg.style.display = "block";
+
+  setTimeout(() => {
+    msg.style.display = "none";
+    window.location.href = "part4.html";
+  }, 4000);
+}
+
+function saveReport(newReport) {
+  let reports = JSON.parse(localStorage.getItem("reports")) || [];
+  const index = reports.findIndex(r => r.part === newReport.part && r.student === newReport.student);
+  if (index >= 0) reports[index] = newReport;
+  else reports.push(newReport);
+  localStorage.setItem("reports", JSON.stringify(reports));
+}
+
+function saveAnswers() {
+  document.querySelectorAll("input").forEach(inp => {
+    if (inp.type === "radio" && inp.checked) {
+      localStorage.setItem(inp.name, inp.value);
+    } else if (inp.type === "checkbox") {
+      const checked = Array.from(document.querySelectorAll(`input[name="${inp.name}"]:checked`))
+        .map(el => el.value)
+        .sort()
+        .join(",");
+      localStorage.setItem(inp.name, checked);
+    }
+  });
+}
+
+window.onload = function() {
+  document.querySelectorAll("input").forEach(inp => {
+    const saved = localStorage.getItem(inp.name);
+    if (saved) {
+      if (inp.type === "radio" && saved === inp.value) inp.checked = true;
+      else if (inp.type === "checkbox") {
+        if (saved.split(",").includes(inp.value)) inp.checked = true;
+      }
+    }
+  });
+};
+
+document.getElementById("logo").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Listening Practice - Part 1</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f8f8f8;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .header-panel {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 30px;
+      box-sizing: border-box;
+      min-height: 80px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .logo {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .header-center {
+      flex: 1;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .header-right label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    #takerName {
+      padding: 9px 16px;
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-size: 15px;
+      width: 220px;
+      transition: all 0.3s;
+    }
+
+    #takerName:focus {
+      outline: none;
+      border-color: #ffd700;
+      box-shadow: 0 0 10px rgba(255,215,0,0.5);
+      background: rgba(255,255,255,0.25);
+    }
+
+    #takerName::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .full-audio {
+      width: 260px;
+      height: 40px;
+    }
+
+    .main-content {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .title {
+      text-align: center;
+      color: #a81011;
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #444;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .table-wrapper {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #eee;
+      padding: 16px 14px;
+      text-align: left;
+      font-size: 16px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #a81011;
+      color: white;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tr:hover td {
+      background: #fff8e1;
+      transition: background 0.2s;
+    }
+
+    input[type="text"] {
+      width: 92%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #a81011;
+      box-shadow: 0 0 0 3px rgba(168,16,17,0.25);
+    }
+
+    .part-buttons {
+      text-align: center;
+      margin: 50px 0;
+    }
+
+    .part-buttons a button {
+      padding: 16px 50px;
+      background: #a81011;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(168,16,17,0.3);
+    }
+
+    .part-buttons a button:hover {
+      background: #870d0e;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(168,16,17,0.4);
+    }
+
+    #resultMessage {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 25px;
+      background: #e6f4ea;
+      color: #155724;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      border: 2px solid #28a745;
+    }
+
+    #contextMenu {
+      position: absolute;
+      display: none;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      z-index: 5000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 5px 0;
+    }
+
+    #contextMenu button {
+      display: block;
+      width: 100%;
+      padding: 10px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    #contextMenu button:hover {
+      background: #f5f5f5;
+    }
+
+    .highlighted {
+      background-color: #fff176;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="contextMenu"><button onclick="highlightSelection()">✨ Highlight</button></div>
+
+<div class="header-panel">
+  <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
+  <div class="header-center">
+    IELTS Listening Practice - Part 1
+  </div>
+  <div class="header-right">
+    <label for="takerName">Student Name:</label>
+    <input type="text" id="takerName" placeholder="Enter your name">
+    <audio id="examAudio" controls>
+      <source src="sounds/listening1.1/part1.mp3" type="audio/mpeg">
+      Your browser does not support audio.
+    </audio>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="title">
+    Part 1: Questions 1–10
+  </div>
+  <div class="subtitle">
+    <strong>Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.</strong>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <tr>
+        <th>NAME OF RESTAURANT</th>
+        <th>LOCATION</th>
+        <th>REASON FOR RECOMMENDATION</th>
+        <th>OTHER COMMENTS</th>
+      </tr>
+      <tr>
+        <td>The Junction</td>
+        <td>Greyson Street, near the station</td>
+        <td>Good for people keen on <input type="text" name="q1"></td>
+        <td>Quite expensive. The <input type="text" name="q2"> is a good place for a drink</td>
+      </tr>
+      <tr>
+        <td>Paloma</td>
+        <td>Bow Street next to the cinema</td>
+        <td><input type="text" name="q3"> food, good for sharing</td>
+        <td>Friendly staff. £50 deposit. Limited <input type="text" name="q4"> food</td>
+      </tr>
+      <tr>
+        <td>The <input type="text" name="q5"></td>
+        <td><input type="text" name="q6"></td>
+        <td>Famous chef. All <input type="text" name="q7"> are very good. Only <input type="text" name="q8"> ingredients</td>
+        <td>Set lunch £<input type="text" name="q9"> per person. Portions of <input type="text" name="q10"> size</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="part-buttons">
+    <a href="part2.html" onclick="saveName(); saveAnswers(); checkPart1();"><button>➡ Part 2</button></a>
+  </div>
+
+  <div id="resultMessage"></div>
+</div>
+
+<script>
+// Prevent audio seeking backwards
+const audio = document.getElementById("examAudio");
+let lastTime = 0;
+audio.addEventListener("timeupdate", () => { lastTime = Math.max(lastTime, audio.currentTime); });
+audio.addEventListener("seeking", () => {
+  if (audio.currentTime < lastTime) audio.currentTime = lastTime;
+});
+
+// Context menu + highlight
+document.addEventListener("contextmenu", e => {
+  e.preventDefault();
+  const menu = document.getElementById("contextMenu");
+  menu.style.top = `${e.pageY}px`;
+  menu.style.left = `${e.pageX}px`;
+  menu.style.display = "block";
+});
+document.addEventListener("click", () => document.getElementById("contextMenu").style.display = "none");
+
+function highlightSelection() {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const span = document.createElement("span");
+    span.className = "highlighted";
+    range.surroundContents(span);
+    selection.removeAllRanges();
+  }
+}
+
+// Correct answers
+const correctAnswersPart1 = {
+  q1: "fish",
+  q2: "roof",
+  q3: "spanish",
+  q4: "vegetarian",
+  q5: "audley",
+  q6: "hotel",
+  q7: "reviews",
+  q8: "local",
+  q9: "30",
+  q10: "average"
+};
+
+function normalizeAnswer(str) {
+  if (!str) return "";
+  let normalized = str.toLowerCase().trim().replace(/\s+/g, " ").replace(/[.,!?;:'"()]/g, "").replace(/\b(a|an|the)\b\s*/gi, "");
+  if (normalized.endsWith("s")) normalized = normalized.replace(/s$/, "");
+  return normalized;
+}
+
+function checkPart1() {
+  const takerName = document.getElementById("takerName").value.trim() || "Anonymous";
+  localStorage.setItem("takerName", takerName);
+
+  let score = 0;
+  let total = 10;
+  let answers = {};
+
+  for (let key in correctAnswersPart1) {
+    const input = document.querySelector(`input[name="${key}"]`);
+    const userAnswer = input ? input.value.trim() : "";
+    const normUser = normalizeAnswer(userAnswer);
+    const normCorrect = normalizeAnswer(correctAnswersPart1[key]);
+
+    answers[key] = { user: userAnswer, correct: correctAnswersPart1[key] };
+
+    if (normUser === normCorrect) score++;
+  }
+
+  const band = Math.round((score / total) * 9 * 2) / 2;
+
+  const report = {
+    part: "Part 1",
+    student: takerName,
+    correct: score,
+    total: total,
+    band: band,
+    date: new Date().toLocaleString("en-US"),
+    answers: answers
+  };
+
+  saveReport(report);
+
+  const msg = document.getElementById("resultMessage");
+  msg.innerHTML = `Part 1 Result: ${score} out of ${total} (Band ≈ ${band})<br>Well done! Moving to Part 2...`;
+  msg.style.display = "block";
+
+  setTimeout(() => {
+    msg.style.display = "none";
+    window.location.href = "part2.html";
+  }, 4000);
+}
+
+function saveReport(newReport) {
+  let reports = JSON.parse(localStorage.getItem("reports")) || [];
+  const index = reports.findIndex(r => r.part === newReport.part && r.student === newReport.student);
+  if (index >= 0) reports[index] = newReport;
+  else reports.push(newReport);
+  localStorage.setItem("reports", JSON.stringify(reports));
+}
+
+function saveName() {
+  const name = document.getElementById("takerName").value.trim();
+  if (name) localStorage.setItem("takerName", name);
+}
+
+function saveAnswers() {
+  document.querySelectorAll("input[type='text']").forEach(inp => {
+    localStorage.setItem(inp.name, inp.value.trim());
+  });
+}
+
+window.onload = function() {
+  const savedName = localStorage.getItem("takerName");
+  if (savedName) document.getElementById("takerName").value = savedName;
+
+  document.querySelectorAll("input[type='text']").forEach(inp => {
+    const saved = localStorage.getItem(inp.name);
+    if (saved) inp.value = saved;
+  });
+};
+
+document.getElementById("logo").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>

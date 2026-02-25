@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Listening Practice - Part 2</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f8f8f8;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .header-panel {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 30px;
+      box-sizing: border-box;
+      min-height: 80px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .logo {
+      height: 50px;
+      width: auto;
+      object-fit: contain;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .header-center {
+      flex: 1;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .full-audio {
+      width: 260px;
+      height: 40px;
+    }
+
+    .main-content {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .title {
+      text-align: center;
+      color: #a81011;
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #444;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .question-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      margin: 20px 0;
+      padding: 20px;
+    }
+
+    .question-card h3 {
+      margin-top: 0;
+      color: #a81011;
+      font-size: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.3);
+      accent-color: #a81011;
+    }
+
+    .part-buttons {
+      text-align: center;
+      margin: 50px 0;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .part-buttons button,
+    .part-buttons a button {
+      padding: 16px 50px;
+      background: #a81011;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(168,16,17,0.3);
+    }
+
+    .part-buttons button:hover,
+    .part-buttons a button:hover {
+      background: #870d0e;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(168,16,17,0.4);
+    }
+
+    #resultMessage {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 25px;
+      background: #e6f4ea;
+      color: #155724;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      border: 2px solid #28a745;
+    }
+
+    #contextMenu {
+      position: absolute;
+      display: none;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      z-index: 5000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 5px 0;
+    }
+
+    #contextMenu button {
+      display: block;
+      width: 100%;
+      padding: 10px 20px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    #contextMenu button:hover {
+      background: #f5f5f5;
+    }
+
+    .highlighted {
+      background-color: #fff176;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="contextMenu"><button onclick="highlightSelection()">✨ Highlight</button></div>
+
+<div class="header-panel">
+  <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
+  <div class="header-center">
+    IELTS Listening Practice - Part 2
+  </div>
+  <audio id="examAudio" controls class="full-audio">
+    <source src="sounds/listening1.1/part2.mp3" type="audio/mpeg">
+    Your browser does not support audio.
+  </audio>
+</div>
+
+<div class="main-content">
+  <div class="title">
+    Part 2: Questions 11–20
+  </div>
+  <div class="subtitle">
+    <strong>Choose the correct letter, A, B or C.</strong>
+  </div>
+
+  <!-- Questions 11–16 -->
+  <div class="question-card">
+    <h3>11. Some people join Heather’s pottery class because they want to...</h3>
+    <label><input type="radio" name="q11" value="A"> A. create an item that looks very old</label>
+    <label><input type="radio" name="q11" value="B"> B. find something that they are good at</label>
+    <label><input type="radio" name="q11" value="C"> C. make something that will outlive them</label>
+  </div>
+
+  <div class="question-card">
+    <h3>12. Heather says pottery differs from other art forms because</h3>
+    <label><input type="radio" name="q12" value="A"> A. it lasts longer in the ground</label>
+    <label><input type="radio" name="q12" value="B"> B. it is practised by more people</label>
+    <label><input type="radio" name="q12" value="C"> C. it can be repaired more easily</label>
+  </div>
+
+  <div class="question-card">
+    <h3>13. What does Heather say is special about the pottery she found?</h3>
+    <label><input type="radio" name="q13" value="A"> A. the marks that are on it</label>
+    <label><input type="radio" name="q13" value="B"> B. the way it was made</label>
+    <label><input type="radio" name="q13" value="C"> C. the material it is made from</label>
+  </div>
+
+  <div class="question-card">
+    <h3>14. What does Heather value most about being a potter?</h3>
+    <label><input type="radio" name="q14" value="A"> A. its calming effect</label>
+    <label><input type="radio" name="q14" value="B"> B. its messy nature</label>
+    <label><input type="radio" name="q14" value="C"> C. its physical benefits</label>
+  </div>
+
+  <div class="question-card">
+    <h3>15. Most of the visitors to Edelman Pottery...</h3>
+    <label><input type="radio" name="q15" value="A"> A. bring friends to join courses</label>
+    <label><input type="radio" name="q15" value="B"> B. have never made a pot before</label>
+    <label><input type="radio" name="q15" value="C"> C. try to learn techniques too quickly</label>
+  </div>
+
+  <div class="question-card">
+    <h3>16. Heather reminds her visitors that they should...</h3>
+    <label><input type="radio" name="q16" value="A"> A. put on their aprons</label>
+    <label><input type="radio" name="q16" value="B"> B. change their clothes</label>
+    <label><input type="radio" name="q16" value="C"> C. take off their jewellery</label>
+  </div>
+
+  <!-- Questions 17–18 -->
+  <div class="question-card">
+    <h3>Questions 17 and 18</h3>
+    <p><strong>Choose TWO letters, A–E.</strong></p>
+    <p>Which TWO things does Heather explain about kilns?</p>
+    <label><input type="checkbox" name="q17_18" value="A"> A. what their function is</label>
+    <label><input type="checkbox" name="q17_18" value="B"> B. when they were invented</label>
+    <label><input type="checkbox" name="q17_18" value="C"> C. ways of keeping them safe</label>
+    <label><input type="checkbox" name="q17_18" value="D"> D. where to put one in your home</label>
+    <label><input type="checkbox" name="q17_18" value="E"> E. what some people use instead of one</label>
+  </div>
+
+  <!-- Questions 19–20 -->
+  <div class="question-card">
+    <h3>Questions 19 and 20</h3>
+    <p><strong>Choose TWO letters, A–E.</strong></p>
+    <p>Which TWO points does Heather make about a potter’s tools?</p>
+    <label><input type="checkbox" name="q19_20" value="A"> A. some are hard to hold</label>
+    <label><input type="checkbox" name="q19_20" value="B"> B. some are worth buying</label>
+    <label><input type="checkbox" name="q19_20" value="C"> C. some are essential items</label>
+    <label><input type="checkbox" name="q19_20" value="D"> D. some have memorable names</label>
+    <label><input type="checkbox" name="q19_20" value="E"> E. some are available for use by participants</label>
+  </div>
+
+  <div class="part-buttons">
+    <a href="part1.html" onclick="saveAnswers(); checkPart2();"><button>← Part 1</button></a>
+    <a href="part3.html" onclick="saveAnswers(); checkPart2();"><button>Part 3 →</button></a>
+  </div>
+
+  <div id="resultMessage"></div>
+</div>
+
+<script>
+// Prevent audio seeking backwards
+const audio = document.getElementById("examAudio");
+let lastTime = 0;
+audio.addEventListener("timeupdate", () => { lastTime = Math.max(lastTime, audio.currentTime); });
+audio.addEventListener("seeking", () => {
+  if (audio.currentTime < lastTime) audio.currentTime = lastTime;
+});
+
+// Context menu + highlight
+document.addEventListener("contextmenu", e => {
+  e.preventDefault();
+  const menu = document.getElementById("contextMenu");
+  menu.style.top = `${e.pageY}px`;
+  menu.style.left = `${e.pageX}px`;
+  menu.style.display = "block";
+});
+document.addEventListener("click", () => document.getElementById("contextMenu").style.display = "none");
+
+function highlightSelection() {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const span = document.createElement("span");
+    span.className = "highlighted";
+    range.surroundContents(span);
+    selection.removeAllRanges();
+  }
+}
+
+// Correct answers (Cambridge IELTS 20 Test 1 Section 2)
+const correctAnswers = {
+  q11: "C",  // make something that will outlive them
+  q12: "A",  // it lasts longer in the ground
+  q13: "C",  // the marks that are on it
+  q14: "A",  // its calming effect
+  q15: "B",  // have never made a pot before
+  q16: "C",  // take off their jewellery
+  q17_18: ["A", "E"],
+  q19_20: ["C", "E"]
+};
+
+function checkPart2() {
+  const takerName = localStorage.getItem("takerName") || "Anonymous";
+
+  let score = 0;
+  let total = 10;
+  let answers = {};
+
+  // Radio 11–16
+  for (let i = 11; i <= 16; i++) {
+    const key = `q${i}`;
+    const selected = document.querySelector(`input[name="${key}"]:checked`);
+    const user = selected ? selected.value : "";
+    const correct = correctAnswers[key];
+    answers[key] = { user, correct };
+    if (user === correct) score++;
+  }
+
+  // Checkboxes 17–18 and 19–20
+  const pairs = [
+    { name: "q17_18", correct: correctAnswers.q17_18 },
+    { name: "q19_20", correct: correctAnswers.q19_20 }
+  ];
+
+  pairs.forEach(pair => {
+    const checked = Array.from(document.querySelectorAll(`input[name="${pair.name}"]:checked`))
+      .map(inp => inp.value);
+    const user = checked.join(", ");
+    const correct = pair.correct.join(", ");
+    answers[pair.name] = { user, correct };
+
+    if (checked.length === pair.correct.length) {
+      pair.correct.forEach(c => {
+        if (checked.includes(c)) score++;
+      });
+    }
+  });
+
+  const band = Math.round((score / total) * 9 * 2) / 2;
+
+  const report = {
+    part: "Part 2",
+    student: takerName,
+    correct: score,
+    total: total,
+    band: band,
+    date: new Date().toLocaleString("en-US"),
+    answers: answers
+  };
+
+  saveReport(report);
+
+  const msg = document.getElementById("resultMessage");
+  msg.innerHTML = `Part 2 Result: ${score} out of ${total} (Band ≈ ${band})<br>Great job! Moving to Part 3...`;
+  msg.style.display = "block";
+
+  setTimeout(() => {
+    msg.style.display = "none";
+    window.location.href = "part3.html";
+  }, 4000);
+}
+
+function saveReport(newReport) {
+  let reports = JSON.parse(localStorage.getItem("reports")) || [];
+  const index = reports.findIndex(r => r.part === newReport.part && r.student === newReport.student);
+  if (index >= 0) reports[index] = newReport;
+  else reports.push(newReport);
+  localStorage.setItem("reports", JSON.stringify(reports));
+}
+
+function saveAnswers() {
+  document.querySelectorAll("input").forEach(inp => {
+    if (inp.type === "radio" && inp.checked) {
+      localStorage.setItem(inp.name, inp.value);
+    } else if (inp.type === "checkbox") {
+      const checked = Array.from(document.querySelectorAll(`input[name="${inp.name}"]:checked`))
+        .map(el => el.value)
+        .sort()
+        .join(",");
+      localStorage.setItem(inp.name, checked);
+    }
+  });
+}
+
+window.onload = function() {
+  document.querySelectorAll("input").forEach(inp => {
+    const saved = localStorage.getItem(inp.name);
+    if (saved) {
+      if (inp.type === "radio" && saved === inp.value) inp.checked = true;
+      else if (inp.type === "checkbox") {
+        if (saved.split(",").includes(inp.value)) inp.checked = true;
+      }
+    }
+  });
+};
+
+document.getElementById("logo").addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>
