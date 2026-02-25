@@ -413,7 +413,7 @@
 </div>
 
 <script>
-  // ================== Firebase ==================
+// ================== Firebase ==================
 const firebaseConfig = {
   apiKey: "AIzaSyC8o2F60E8Pi_TfEDA_z6EeokG-gECUXjg",
   authDomain: "oxbridge-listening-practice.firebaseapp.com",
@@ -426,9 +426,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-// Analytics (опционально — можно убрать строку ниже)
-const analytics = firebase.analytics();
 // ================== /Firebase ==================
+
 // Запрет перемотки аудио назад
 const audio = document.getElementById("examAudio");
 let lastTime = 0;
@@ -437,7 +436,7 @@ audio.addEventListener("seeking", () => {
   if (audio.currentTime < lastTime) audio.currentTime = lastTime;
 });
 
-// Контекстное меню + подсветка (безопасная версия)
+// Контекстное меню + подсветка
 document.addEventListener("contextmenu", e => {
   e.preventDefault();
   const menu = document.getElementById("contextMenu");
@@ -466,7 +465,7 @@ function highlightSelection() {
   selection.removeAllRanges();
 }
 
-// Правильные ответы (Cambridge IELTS 20 Test 1 Section 2)
+// Правильные ответы
 const correctAnswers = {
   q11: "C",
   q12: "A",
@@ -494,7 +493,7 @@ function checkPart2() {
     if (user === correctAnswers[key]) score++;
   }
 
-  // Checkboxes 17–18 и 19–20
+  // Checkboxes
   const pairs = [
     { name: "q17_18", correct: correctAnswers.q17_18 },
     { name: "q19_20", correct: correctAnswers.q19_20 }
@@ -525,29 +524,23 @@ function checkPart2() {
 
   saveReport(report);
 
-  // Прямой переход без сообщения
   window.location.href = "part3.html";
 }
+
 function saveReport(newReport) {
-  // Бэкап в localStorage (старый способ — оставляем)
   let reports = JSON.parse(localStorage.getItem("reports")) || [];
   const index = reports.findIndex(r => r.part === newReport.part && r.student === newReport.student);
   if (index >= 0) reports[index] = newReport;
   else reports.push(newReport);
   localStorage.setItem("reports", JSON.stringify(reports));
 
-  // Основное — сохранение в Firebase (облако)
   db.collection("reports").add({
     ...newReport,
     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     createdAt: new Date().toISOString()
   })
-  .then(() => {
-    console.log("Отчёт успешно сохранён в облако");
-  })
-  .catch(error => {
-    console.error("Ошибка сохранения в Firestore:", error);
-  });
+  .then(() => console.log("Part 2 saved to cloud"))
+  .catch(error => console.error("Cloud save error (Part 2):", error));
 }
 
 function saveAnswers() {

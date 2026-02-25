@@ -311,6 +311,12 @@
       }
     }
   </style>
+  <!-- Firebase App (основной модуль) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<!-- Firestore (база данных) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<!-- Analytics (опционально, можно убрать, если не нужен) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics-compat.js"></script>
 </head>
 <body>
 
@@ -408,6 +414,21 @@
 </div>
 
 <script>
+// ================== Firebase ==================
+const firebaseConfig = {
+  apiKey: "AIzaSyC8o2F60E8Pi_TfEDA_z6EeokG-gECUXjg",
+  authDomain: "oxbridge-listening-practice.firebaseapp.com",
+  projectId: "oxbridge-listening-practice",
+  storageBucket: "oxbridge-listening-practice.firebasestorage.app",
+  messagingSenderId: "32964456597",
+  appId: "1:32964456597:web:3a315700117ff92a6a2b9c",
+  measurementId: "G-HBCHQ49MWS"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+// ================== /Firebase ==================
+
 // Запрет перемотки аудио назад
 const audio = document.getElementById("examAudio");
 let lastTime = 0;
@@ -416,7 +437,7 @@ audio.addEventListener("seeking", () => {
   if (audio.currentTime < lastTime) audio.currentTime = lastTime;
 });
 
-// Контекстное меню + подсветка (безопасная версия)
+// Контекстное меню + подсветка
 document.addEventListener("contextmenu", e => {
   e.preventDefault();
   const menu = document.getElementById("contextMenu");
@@ -504,7 +525,6 @@ function checkPart3() {
 
   saveReport(report);
 
-  // Прямой переход без сообщения
   window.location.href = "part4.html";
 }
 
@@ -514,6 +534,14 @@ function saveReport(newReport) {
   if (index >= 0) reports[index] = newReport;
   else reports.push(newReport);
   localStorage.setItem("reports", JSON.stringify(reports));
+
+  db.collection("reports").add({
+    ...newReport,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    createdAt: new Date().toISOString()
+  })
+  .then(() => console.log("Part 3 saved to cloud"))
+  .catch(error => console.error("Cloud save error (Part 3):", error));
 }
 
 function saveAnswers() {

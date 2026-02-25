@@ -462,7 +462,7 @@
 </div>
 
 <script>
-  // ================== Firebase ==================
+// ================== Firebase ==================
 const firebaseConfig = {
   apiKey: "AIzaSyC8o2F60E8Pi_TfEDA_z6EeokG-gECUXjg",
   authDomain: "oxbridge-listening-practice.firebaseapp.com",
@@ -475,9 +475,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-// Analytics (опционально — можно убрать строку ниже)
-const analytics = firebase.analytics();
 // ================== /Firebase ==================
+
 // Запрет перемотки аудио назад
 const audio = document.getElementById("examAudio");
 let lastTime = 0;
@@ -570,26 +569,23 @@ function checkPart1() {
   // Прямой переход без сообщения
   window.location.href = "part2.html";
 }
+
 function saveReport(newReport) {
-  // Бэкап в localStorage (старый способ — оставляем)
+  // Бэкап в localStorage
   let reports = JSON.parse(localStorage.getItem("reports")) || [];
   const index = reports.findIndex(r => r.part === newReport.part && r.student === newReport.student);
   if (index >= 0) reports[index] = newReport;
   else reports.push(newReport);
   localStorage.setItem("reports", JSON.stringify(reports));
 
-  // Основное — сохранение в Firebase (облако)
+  // Сохранение в Firebase
   db.collection("reports").add({
     ...newReport,
     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     createdAt: new Date().toISOString()
   })
-  .then(() => {
-    console.log("Отчёт успешно сохранён в облако");
-  })
-  .catch(error => {
-    console.error("Ошибка сохранения в Firestore:", error);
-  });
+  .then(() => console.log("Part 1 saved to cloud"))
+  .catch(error => console.error("Cloud save error (Part 1):", error));
 }
 
 function saveName() {

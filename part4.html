@@ -453,6 +453,21 @@
 </div>
 
 <script>
+// ================== Firebase ==================
+const firebaseConfig = {
+  apiKey: "AIzaSyC8o2F60E8Pi_TfEDA_z6EeokG-gECUXjg",
+  authDomain: "oxbridge-listening-practice.firebaseapp.com",
+  projectId: "oxbridge-listening-practice",
+  storageBucket: "oxbridge-listening-practice.firebasestorage.app",
+  messagingSenderId: "32964456597",
+  appId: "1:32964456597:web:3a315700117ff92a6a2b9c",
+  measurementId: "G-HBCHQ49MWS"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+// ================== /Firebase ==================
+
 // Запрет перемотки аудио назад
 const audio = document.getElementById("examAudio");
 let lastTime = 0;
@@ -461,7 +476,7 @@ audio.addEventListener("seeking", () => {
   if (audio.currentTime < lastTime) audio.currentTime = lastTime;
 });
 
-// Контекстное меню + подсветка (безопасная версия)
+// Контекстное меню + подсветка
 document.addEventListener("contextmenu", e => {
   e.preventDefault();
   const menu = document.getElementById("contextMenu");
@@ -490,7 +505,7 @@ function highlightSelection() {
   selection.removeAllRanges();
 }
 
-// Правильные ответы для Part 4
+// Правильные ответы
 const correctAnswersPart4 = {
   q31: "factories",
   q32: "dead",
@@ -537,43 +552,51 @@ function checkPart4() {
     date: new Date().toISOString(),
     answers: answersPart4
   };
+
   saveReport(reportPart4);
 
   // Общий результат
-  let reports = JSON.parse(localStorage.getItem("reports")) || [];
-  let studentReports = reports.filter(r => r.student === takerName);
+  db.collection("reports")
+    .where("student", "==", takerName)
+    .get()
+    .then(snapshot => {
+      let totalCorrect = 0;
+      let totalQuestions = 0;
 
-  let totalCorrect = 0;
-  let totalQuestions = 0;
-  studentReports.forEach(r => {
-    totalCorrect += r.correct;
-    totalQuestions += r.total;
-  });
+      snapshot.forEach(doc => {
+        const r = doc.data();
+        totalCorrect += r.correct;
+        totalQuestions += r.total;
+      });
 
-  const overallBand = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 9 * 2) / 2 : 0;
+      const overallBand = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 9 * 2) / 2 : 0;
 
-  const testStartTime = parseInt(localStorage.getItem("testStartTime") || Date.now());
-  const timeSpentMs = Date.now() - testStartTime;
-  const minutes = Math.floor(timeSpentMs / 60000);
-  const seconds = Math.floor((timeSpentMs % 60000) / 1000);
-  const timeString = `${minutes} min ${seconds} sec`;
+      const testStartTime = parseInt(localStorage.getItem("testStartTime") || Date.now());
+      const timeSpentMs = Date.now() - testStartTime;
+      const minutes = Math.floor(timeSpentMs / 60000);
+      const seconds = Math.floor((timeSpentMs % 60000) / 1000);
+      const timeString = `${minutes} min ${seconds} sec`;
 
-  const submitDate = new Date().toLocaleString("en-US", {
-    day: "2-digit", month: "2-digit", year: "numeric",
-    hour: "2-digit", minute: "2-digit"
-  });
+      const submitDate = new Date().toLocaleString("en-US", {
+        day: "2-digit", month: "2-digit", year: "numeric",
+        hour: "2-digit", minute: "2-digit"
+      });
 
-  document.getElementById("modalName").innerText = `Student: ${takerName}`;
-  document.getElementById("modalTotalScore").innerHTML = `Total Score: <span class="highlight-score">${totalCorrect}/40</span>`;
-  document.getElementById("modalBand").innerHTML = `Overall Band: <span class="highlight-score">${overallBand}</span>`;
-  document.getElementById("modalTime").innerText = `Time Spent: ${timeString}`;
-  document.getElementById("modalDate").innerText = `Submitted: ${submitDate}`;
+      document.getElementById("modalName").innerText = `Student: ${takerName}`;
+      document.getElementById("modalTotalScore").innerHTML = `Total Score: <span class="highlight-score">${totalCorrect}/40</span>`;
+      document.getElementById("modalBand").innerHTML = `Overall Band: <span class="highlight-score">${overallBand}</span>`;
+      document.getElementById("modalTime").innerText = `Time Spent: ${timeString}`;
+      document.getElementById("modalDate").innerText = `Submitted: ${submitDate}`;
 
-  document.getElementById("resultModal").style.display = "flex";
+      document.getElementById("resultModal").style.display = "flex";
+    })
+    .catch(error => {
+      console.error("Error loading total results:", error);
+      alert("Ошибка загрузки результатов");
+    });
 }
 
 function closeModal() {
-  // Очистка всех данных текущего студента
   for (let i = 1; i <= 40; i++) {
     localStorage.removeItem(`q${i}`);
   }
@@ -591,6 +614,14 @@ function saveReport(newReport) {
   if (index >= 0) reports[index] = newReport;
   else reports.push(newReport);
   localStorage.setItem("reports", JSON.stringify(reports));
+
+  db.collection("reports").add({
+    ...newReport,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    createdAt: new Date().toISOString()
+  })
+  .then(() => console.log("Part 4 saved to cloud"))
+  .catch(error => console.error("Cloud save error (Part 4):", error));
 }
 
 function saveAnswers() {
