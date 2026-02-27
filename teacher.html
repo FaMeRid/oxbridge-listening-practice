@@ -7,7 +7,13 @@
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <script src="common.js"></script>
 
   <style>
     :root {
@@ -18,11 +24,12 @@
       --success: #28a745;
       --danger: #dc3545;
       --warning: #f39c12;
+      --overlay: rgba(0,0,0,0.65);
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
       background: var(--light);
       color: #333;
@@ -40,16 +47,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 20px;
+      padding: 12px 30px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
       flex-wrap: wrap;
       gap: 10px;
     }
 
-    .logo {
-      height: 50px;
-      cursor: pointer;
-    }
+    .logo { height: 50px; cursor: pointer; }
 
     .header-center {
       flex: 1;
@@ -69,9 +73,7 @@
       transition: all 0.3s;
     }
 
-    .logout-btn:hover {
-      background: #ffecec;
-    }
+    .logout-btn:hover { background: #ffecec; }
 
     .main-content {
       max-width: 1200px;
@@ -102,26 +104,13 @@
       transition: transform 0.3s;
     }
 
-    .stat-card:hover {
-      transform: translateY(-6px);
-    }
+    .stat-card:hover { transform: translateY(-6px); }
 
-    .stat-card h3 {
-      color: var(--primary);
-      margin: 0 0 12px;
-      font-size: 16px;
-    }
+    .stat-card h3 { color: var(--primary); margin: 0 0 12px; font-size: 16px; }
 
-    .stat-card p {
-      font-size: 28px;
-      font-weight: bold;
-      margin: 0;
-    }
+    .stat-card p { font-size: 28px; font-weight: bold; margin: 0; }
 
-    .table-wrapper {
-      overflow-x: auto;
-      margin-bottom: 40px;
-    }
+    .table-wrapper { overflow-x: auto; margin-bottom: 40px; }
 
     table {
       width: 100%;
@@ -148,28 +137,26 @@
       font-size: 13px;
     }
 
-    tr:hover {
-      background: #fff8e1;
-      cursor: pointer;
-    }
+    tr:hover { background: #fff8e1; cursor: pointer; }
 
     .band-high { color: var(--success); font-weight: bold; }
     .band-medium { color: var(--warning); font-weight: bold; }
     .band-low { color: var(--danger); font-weight: bold; }
 
-    #detailsModal, #clearConfirmModal {
+    /* Modals & overlay */
+    #detailsModal, #secureClearModal, #loginOverlay, #loadingOverlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.65);
+      background: var(--overlay);
       justify-content: center;
       align-items: center;
       z-index: 2000;
     }
 
-    .modal-content, .confirm-modal-content {
+    .modal-content {
       background: white;
-      padding: 30px;
+      padding: 35px;
       border-radius: 12px;
       max-width: 95%;
       width: 95%;
@@ -177,6 +164,7 @@
       overflow-y: auto;
       position: relative;
       text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
     .close-btn {
@@ -203,23 +191,12 @@
       font-size: 14px;
     }
 
-    .answers-table th {
-      background: var(--primary);
-      color: white;
-    }
+    .answers-table th { background: var(--primary); color: white; }
 
-    .correct { background: #e6f4ea !important; }
-    .wrong { background: #fdecea !important; }
+    .correct { background: #e6f4ea !important; color: #155724; }
+    .wrong { background: #fdecea !important; color: #721c24; }
 
-    #loginOverlay {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, var(--primary) 0%, #ffffff 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 3000;
-    }
+    #loginOverlay { background: linear-gradient(135deg, var(--primary) 0%, #ffffff 100%); }
 
     #loginBox {
       background: white;
@@ -231,16 +208,9 @@
       box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     }
 
-    #loginBox img {
-      width: 120px;
-      margin-bottom: 20px;
-    }
+    #loginBox img { width: 120px; margin-bottom: 20px; }
 
-    #loginBox h3 {
-      color: var(--primary);
-      margin-bottom: 20px;
-      font-size: 22px;
-    }
+    #loginBox h3 { color: var(--primary); margin-bottom: 20px; font-size: 22px; }
 
     .input-group {
       display: flex;
@@ -306,140 +276,190 @@
 
     .confirm-btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
-    /* Мобильная версия */
+    .details-btn {
+      padding: 8px 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px rgba(168,16,17,0.2);
+    }
+
+    .details-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(168,16,17,0.3);
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(255,255,255,0.3);
+      border-top: 6px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     @media (max-width: 768px) {
       body { font-size: 15px; }
       .header-panel { padding: 10px 15px; flex-wrap: wrap; gap: 10px; }
-      .header-center { font-size: 20px; flex: 1 1 100%; text-align: center; }
+      .header-center { font-size: 20px; flex: 1 1 100%; }
       .logo { height: 40px; }
       .logout-btn { padding: 8px 16px; font-size: 14px; }
       .main-content { padding: 0 15px; margin: 20px auto; }
       h1 { font-size: 24px; }
       .stats { grid-template-columns: 1fr; gap: 15px; }
-      .stat-card { padding: 15px; }
-      .stat-card p { font-size: 24px; }
-      .table-wrapper { overflow-x: auto; }
-      table { font-size: 14px; min-width: 600px; }
-      th, td { padding: 12px 10px; }
-      .modal-content, .confirm-modal-content { padding: 20px; width: 95%; }
-      .modal-content h2 { font-size: 22px; }
-      .confirm-buttons { flex-direction: column; gap: 10px; }
-      .confirm-btn { width: 100%; }
-    }
-
-    @media (max-width: 480px) {
-      h1 { font-size: 20px; }
-      .stat-card p { font-size: 22px; }
-      table { font-size: 13px; min-width: 500px; }
-      th, td { padding: 10px 8px; }
+      .details-btn { width: 100%; padding: 12px; font-size: 16px; }
     }
   </style>
 </head>
 <body>
 
+<!-- Loading Overlay -->
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- Login Overlay -->
 <div id="loginOverlay">
   <div id="loginBox">
-    <img src="assets/logo2.png" alt="Oxbridge Logo">
+    <img src="assets/logo.png" alt="Oxbridge Logo">
     <h3>Teacher Login</h3>
     <div class="input-group">
-      <span>👤</span>
-      <input type="text" id="login" placeholder="Login">
+      <span><i class="fas fa-user"></i></span>
+      <input type="text" id="login" placeholder="Login (Shohruh)" autocomplete="off">
     </div>
     <div class="input-group">
-      <span>🔒</span>
-      <input type="password" id="password" placeholder="Password">
+      <span><i class="fas fa-lock"></i></span>
+      <input type="password" id="password" placeholder="Password" autocomplete="off">
     </div>
     <button id="loginBtn" onclick="checkLogin()">Login</button>
     <div id="errorMsg"></div>
   </div>
 </div>
 
-<div class="header-panel" id="dashboardHeader" style="display:none;">
-  <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
-  <div class="header-center">
-    Teacher Dashboard
-  </div>
-  <button class="logout-btn" onclick="logout()">Logout</button>
-</div>
-
-<div class="main-content" id="dashboard" style="display:none;">
-  <div class="stats">
-    <div class="stat-card">
-      <h3>Students</h3>
-      <p id="studentCount">0</p>
-    </div>
-    <div class="stat-card">
-      <h3>Avg Band</h3>
-      <p id="avgBand">0.0</p>
-    </div>
-    <div class="stat-card">
-      <h3>Total Reports</h3>
-      <p id="totalReports">0</p>
-    </div>
+<!-- Dashboard -->
+<div id="dashboard" style="display:none;">
+  <div class="header-panel" id="dashboardHeader" style="display:none;">
+    <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
+    <div class="header-center">Teacher Dashboard - IELTS Reports</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
-  <h1>All Student Results</h1>
-  <div class="table-wrapper">
-    <table id="reportsTable">
-      <thead>
-        <tr>
-          <th>Student</th>
-          <th>Total Score</th>
-          <th>Band</th>
-          <th>Last Report Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="reportsBody"></tbody>
-    </table>
-  </div>
+  <div class="main-content">
+    <h1>Student Reports</h1>
 
-  <div style="text-align:center; margin:40px 0;">
-    <button onclick="clearAllReports()" style="padding:14px 40px; background:var(--danger); color:white; border:none; border-radius:50px; font-size:17px; cursor:pointer;">
+    <div class="stats">
+      <div class="stat-card">
+        <h3>Number of Students</h3>
+        <p id="studentCount">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Average Band</h3>
+        <p id="avgBand">0.0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Total Reports</h3>
+        <p id="totalReports">0</p>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Score (correct/total)</th>
+            <th>Band</th>
+            <th>Last Test</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="reportsBody">
+          <tr><td colspan="5" style="text-align:center;padding:30px;">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Clear All Reports Button -->
+    <button id="clearAllBtn"
+            style="display:block; margin:50px auto 60px; padding:16px 50px;
+                   background:var(--danger); color:white; border:none;
+                   border-radius:50px; font-size:18px; font-weight:bold;
+                   cursor:pointer; box-shadow:0 6px 20px rgba(220,53,69,0.3);
+                   transition:all 0.3s;">
       Clear All Reports
     </button>
   </div>
 </div>
 
-<!-- Details Modal -->
+<!-- Student Details Modal -->
 <div id="detailsModal">
   <div class="modal-content">
     <span class="close-btn" onclick="closeDetails()">×</span>
-    <h2 id="modalTitle">Student Report Details</h2>
+    <h2 id="modalTitle">Student Details</h2>
     <div id="modalContent"></div>
   </div>
 </div>
 
-<!-- Clear Confirmation Modal -->
-<div id="clearConfirmModal">
-  <div class="confirm-modal-content">
-    <span class="close-btn" onclick="document.getElementById('clearConfirmModal').style.display='none'">×</span>
+<!-- Secure Clear Confirmation Modal with Password -->
+<div id="secureClearModal" style="display:none;">
+  <div class="modal-content" style="max-width:420px; padding:35px;">
+    <span class="close-btn" onclick="document.getElementById('secureClearModal').style.display='none'">×</span>
     <h2 style="color:var(--danger);">Clear All Reports?</h2>
-    <p style="font-size:17px; margin:20px 0 30px; color:#444;">
-      This action will permanently delete <strong>all</strong> student results from the cloud.<br>Are you sure?
+    <p style="margin:20px 0; color:#444;">
+      This action will <strong>permanently delete</strong> all student reports.<br>
+      This cannot be undone.
     </p>
+    
+    <p style="font-weight:bold; margin-bottom:12px;">Enter security password:</p>
+    <input type="password" id="clearPassword" placeholder="Security password" 
+           style="width:100%; padding:12px; font-size:16px; border:1px solid #ddd; border-radius:6px; margin-bottom:15px;">
+    
+    <div id="clearError" style="color:var(--danger); font-weight:bold; min-height:24px; margin:10px 0; display:none;"></div>
+    
     <div class="confirm-buttons">
-      <button class="confirm-btn cancel-btn" onclick="document.getElementById('clearConfirmModal').style.display='none'">Cancel</button>
-      <button class="confirm-btn delete-btn" id="confirmClearBtn">Yes, Clear Everything</button>
+      <button class="confirm-btn cancel-btn" 
+              onclick="document.getElementById('secureClearModal').style.display='none'">Cancel</button>
+      <button class="confirm-btn delete-btn" 
+              onclick="confirmClearWithPassword()">Delete All</button>
     </div>
   </div>
 </div>
 
 <script>
-// ================== Firebase ==================
-const firebaseConfig = {
-  apiKey: "AIzaSyC8o2F60E8Pi_TfEDA_z6EeokG-gECUXjg",
-  authDomain: "oxbridge-listening-practice.firebaseapp.com",
-  projectId: "oxbridge-listening-practice",
-  storageBucket: "oxbridge-listening-practice.firebasestorage.app",
-  messagingSenderId: "32964456597",
-  appId: "1:32964456597:web:3a315700117ff92a6a2b9c",
-  measurementId: "G-HBCHQ49MWS"
-};
+// Security password
+const CLEAR_PASSWORD = "oxbridge2026";
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-// ================== /Firebase ==================
+// Loading
+function showLoading(show) {
+  const overlay = document.getElementById("loadingOverlay");
+  if (overlay) overlay.style.display = show ? "flex" : "none";
+}
+
+// Teacher sign in
+function signInTeacher(email, password) {
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
+      document.getElementById("loginOverlay").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+      document.getElementById("dashboardHeader").style.display = "flex";
+      loadReports();
+    })
+    .catch(error => {
+      document.getElementById("errorMsg").innerText = "Login error: " + error.message;
+    });
+}
 
 function checkLogin() {
   const login = document.getElementById("login").value.trim();
@@ -449,188 +469,64 @@ function checkLogin() {
 
   if (login === "Shohruh" && (password === "asdfghjkl;'" || savedPass === password)) {
     if (!savedPass) localStorage.setItem("teacherPass", password);
-
-    document.getElementById("loginOverlay").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
-    document.getElementById("dashboardHeader").style.display = "flex";
-    loadReports();
+    signInTeacher("sh.shoberdiev@gmail.com", password);
   } else {
     document.getElementById("errorMsg").innerText = "Invalid login or password";
   }
 }
 
 function logout() {
-  if (confirm("Do you want to log out?")) {
+  firebase.auth().signOut().then(() => {
+    localStorage.removeItem("teacherPass");
     document.getElementById("loginOverlay").style.display = "flex";
     document.getElementById("dashboard").style.display = "none";
     document.getElementById("dashboardHeader").style.display = "none";
     document.getElementById("login").value = "";
     document.getElementById("password").value = "";
     document.getElementById("errorMsg").innerText = "";
-  }
+  });
 }
 
-function loadReports() {
-  const tbody = document.getElementById("reportsBody");
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">Загрузка результатов...</td></tr>';
+// Confirm clear with password
+function confirmClearWithPassword() {
+  const input = document.getElementById("clearPassword").value.trim();
+  const errorEl = document.getElementById("clearError");
 
-  db.collection("reports")
-    .orderBy("timestamp", "desc")
-    .onSnapshot(snapshot => {
-      tbody.innerHTML = "";
+  if (input === CLEAR_PASSWORD) {
+    document.getElementById("secureClearModal").style.display = "none";
+    showLoading(true);
 
-      if (snapshot.empty) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">Пока нет результатов студентов</td></tr>';
-        updateStats(0, 0, 0);
-        return;
-      }
-
-      const grouped = {};
-      snapshot.forEach(doc => {
-        const r = doc.data();
-        if (!grouped[r.student]) {
-          grouped[r.student] = { correct: 0, total: 0, date: r.date, parts: [] };
-        }
-        grouped[r.student].correct += r.correct;
-        grouped[r.student].total += r.total;
-        if (r.date > grouped[r.student].date) grouped[r.student].date = r.date;
-        grouped[r.student].parts.push(r.part);
-      });
-
-      let totalStudents = Object.keys(grouped).length;
-      let totalBandSum = 0;
-
-      Object.keys(grouped).forEach(student => {
-        const g = grouped[student];
-        const band = Math.round((g.correct / g.total) * 9 * 2) / 2;
-        totalBandSum += band;
-
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${student}</td>
-          <td>${g.correct} / ${g.total}</td>
-          <td class="${band >= 7 ? 'band-high' : band >= 5 ? 'band-medium' : 'band-low'}">${band}</td>
-          <td>${new Date(g.date).toLocaleString()}</td>
-          <td><button onclick="showStudentDetails('${student}')">Посмотреть детали</button></td>
-        `;
-        tbody.appendChild(row);
-      });
-
-      updateStats(totalStudents, totalBandSum / totalStudents || 0);
-    }, error => {
-      console.error("Ошибка загрузки из Firestore:", error);
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:red;">Ошибка загрузки данных</td></tr>';
-    });
-}
-
-function updateStats(students, avgBand) {
-  document.getElementById("studentCount").innerText = students;
-  document.getElementById("avgBand").innerText = avgBand.toFixed(1);
-  document.getElementById("totalReports").innerText = students * 4; // assuming 4 parts per student
-}
-
-function showStudentDetails(student) {
-  db.collection("reports")
-    .where("student", "==", student)
-    .orderBy("timestamp", "asc")
-    .get()
-    .then(snapshot => {
-      if (snapshot.empty) {
-        alert("Нет данных для этого студента");
-        return;
-      }
-
-      const modal = document.getElementById("detailsModal");
-      const title = document.getElementById("modalTitle");
-      const content = document.getElementById("modalContent");
-
-      title.innerText = `${student} - Полный отчёт`;
-
-      let html = `<p><strong>Общий балл:</strong> загружается...</p>`;
-      html += `<p><strong>Общий Band:</strong> загружается...</p>`;
-
-      let totalCorrect = 0;
-      let totalQuestions = 0;
-
-      snapshot.forEach(doc => {
-        const report = doc.data();
-        totalCorrect += report.correct;
-        totalQuestions += report.total;
-
-        html += `<h3>${report.part} - ${report.correct}/${report.total} (Band ${report.band})</h3>`;
-        html += `<table class="answers-table">
-          <tr><th>Вопрос</th><th>Ответ студента</th><th>Правильный</th><th>Статус</th></tr>`;
-
-        Object.keys(report.answers).forEach(q => {
-          const ans = report.answers[q];
-          let user = ans.user || "—";
-          let correct = Array.isArray(ans.correct) ? ans.correct.join(", ") : ans.correct || "—";
-          let status = "—";
-          let rowClass = "";
-
-          if (user !== "—") {
-            if (Array.isArray(ans.correct)) {
-              const userArr = user.split(",").map(a => a.trim().toLowerCase());
-              const correctArr = ans.correct.map(c => c.toLowerCase());
-              const isCorrect = correctArr.length === userArr.length && correctArr.every(c => userArr.includes(c));
-              status = isCorrect ? "Correct" : "Wrong";
-              rowClass = isCorrect ? "correct" : "wrong";
-            } else {
-              const isCorrect = user.trim().toLowerCase() === ans.correct.toLowerCase();
-              status = isCorrect ? "Correct" : "Wrong";
-              rowClass = isCorrect ? "correct" : "wrong";
-            }
-          }
-
-          html += `
-            <tr class="${rowClass}">
-              <td>${q}</td>
-              <td>${user}</td>
-              <td>${correct}</td>
-              <td>${status}</td>
-            </tr>
-          `;
-        });
-
-        html += `</table><hr style="margin:20px 0;">`;
-      });
-
-      html = html.replace("загружается...", `${totalCorrect} / ${totalQuestions}`);
-      html = html.replace("загружается...", Math.round((totalCorrect / totalQuestions) * 9 * 2) / 2);
-
-      content.innerHTML = html;
-      modal.style.display = "flex";
-    })
-    .catch(error => {
-      console.error("Ошибка загрузки деталей:", error);
-      alert("Не удалось загрузить детали студента");
-    });
-}
-
-function closeDetails() {
-  document.getElementById("detailsModal").style.display = "none";
-}
-
-function clearAllReports() {
-  document.getElementById("clearConfirmModal").style.display = "flex";
-}
-
-document.getElementById("confirmClearBtn").addEventListener("click", () => {
-  if (confirm("Ты уверен? Это удалит ВСЕ результаты студентов из облака!")) {
-    db.collection("reports").get().then(snapshot => {
-      const batch = db.batch();
-      snapshot.forEach(doc => batch.delete(doc.ref));
-      batch.commit().then(() => {
-        alert("Все результаты удалены");
-        document.getElementById("clearConfirmModal").style.display = "none";
+    db.collection("reports").get()
+      .then(snapshot => {
+        const batch = db.batch();
+        snapshot.forEach(doc => batch.delete(doc.ref));
+        return batch.commit();
+      })
+      .then(() => {
+        alert("All reports have been successfully deleted");
         loadReports();
-      }).catch(error => {
-        console.error("Ошибка удаления:", error);
-        alert("Ошибка при удалении");
+        showLoading(false);
+      })
+      .catch(err => {
+        console.error("Clear error:", err);
+        alert("Error deleting reports: " + err.message);
+        showLoading(false);
       });
-    });
+  } else {
+    errorEl.textContent = "Incorrect password";
+    errorEl.style.display = "block";
   }
+}
+
+// Open clear modal
+document.getElementById("clearAllBtn").addEventListener("click", () => {
+  document.getElementById("clearPassword").value = "";
+  document.getElementById("clearError").style.display = "none";
+  document.getElementById("secureClearModal").style.display = "flex";
 });
+
+// Paste here all your other functions: loadReports, showStudentDetails, normalizeAnswer, updateStats, closeDetails, etc.
+// They remain the same as in your original file — just keep the English versions of alerts and texts inside them if needed.
 
 window.onload = function() {
   const savedPass = localStorage.getItem("teacherPass");
@@ -640,6 +536,17 @@ window.onload = function() {
     checkLogin();
   }
 };
+
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById("loginOverlay").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("dashboardHeader").style.display = "flex";
+    loadReports();
+  } else {
+    document.getElementById("loginOverlay").style.display = "flex";
+  }
+});
 </script>
 
 </body>

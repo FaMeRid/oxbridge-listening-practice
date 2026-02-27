@@ -4,323 +4,45 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IELTS Listening Practice - Part 3</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+
+  <script src="common.js"></script>
+
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #f8f8f8;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .header-panel {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      width: 100%;
-      background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 20px;
-      box-sizing: border-box;
-      min-height: 70px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .logo {
-      height: 50px;
-      width: auto;
-      object-fit: contain;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .logo:hover {
-      transform: scale(1.05);
-    }
-
-    .header-center {
-      flex: 1;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    /* Красивый кастомный аудио-плеер */
-    .full-audio {
-      width: 260px;
-      height: 40px;
-      outline: none;
-      border-radius: 50px;
-      background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
-      color: white;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    audio::-webkit-media-controls-panel {
-      background: transparent;
-      border-radius: 50px;
-    }
-
-    audio::-webkit-media-controls-play-button {
-      background-color: white;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      margin: 4px;
-    }
-
-    audio::-webkit-media-controls-current-time-display,
-    audio::-webkit-media-controls-time-remaining-display {
-      color: white;
-      font-size: 12px;
-      margin: 0 8px;
-    }
-
-    audio::-webkit-media-controls-timeline {
-      background: rgba(255,255,255,0.3);
-      border-radius: 10px;
-      height: 6px;
-    }
-
-    audio::-webkit-media-controls-timeline-container {
-      margin: 0 10px;
-    }
-
-    audio::-webkit-media-controls-volume-slider {
-      width: 80px;
-      margin: 0 10px;
-    }
-
-    /* Для Firefox */
-    audio::-moz-range-track {
-      background: rgba(255,255,255,0.3);
-      border-radius: 10px;
-      height: 6px;
-    }
-
-    audio::-moz-range-progress {
-      background: white;
-      border-radius: 10px;
-    }
-
-    .main-content {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    .title {
-      text-align: center;
-      color: #a81011;
-      font-size: 32px;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #444;
-      font-size: 18px;
-      margin-bottom: 30px;
-    }
-
-    .question-card {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-      margin: 20px 0;
-      padding: 20px;
-    }
-
-    .question-card h3 {
-      margin-top: 0;
-      color: #a81011;
-      font-size: 20px;
-    }
-
-    .question-card.normal h3 {
-      color: #333;
-      font-size: 18px;
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin: 12px 0;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    input[type="radio"],
-    input[type="checkbox"] {
-      margin-right: 10px;
-      transform: scale(1.3);
-      accent-color: #a81011;
-    }
-
-    .part-buttons {
-      text-align: center;
-      margin: 50px 0;
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-    }
-
-    .part-buttons button,
-    .part-buttons a button {
-      padding: 16px 50px;
-      background: #a81011;
-      color: white;
-      border: none;
-      border-radius: 50px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 4px 15px rgba(168,16,17,0.3);
-    }
-
-    .part-buttons button:hover,
-    .part-buttons a button:hover {
-      background: #870d0e;
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(168,16,17,0.4);
-    }
-
-    /* Контекстное меню */
-    #contextMenu {
-      position: absolute;
-      display: none;
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      z-index: 5000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      padding: 5px 0;
-    }
-
-    #contextMenu button {
-      display: block;
-      width: 100%;
-      padding: 10px 20px;
-      border: none;
-      background: none;
-      cursor: pointer;
-      text-align: left;
-      font-size: 15px;
-    }
-
-    #contextMenu button:hover {
-      background: #f5f5f5;
-    }
-
-    .highlighted {
-      background-color: #fff176;
-      padding: 2px 4px;
-      border-radius: 3px;
-    }
-
-    /* Мобильная версия */
-    @media (max-width: 768px) {
-      body {
-        font-size: 15px;
-      }
-
-      .header-panel {
-        padding: 10px 15px;
-        min-height: 60px;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .header-center {
-        font-size: 18px;
-        flex: 1 1 100%;
-        text-align: center;
-      }
-
-      .logo {
-        height: 40px;
-      }
-
-      .full-audio {
-        width: 100%;
-        max-width: 300px;
-        height: 38px;
-      }
-
-      .main-content {
-        padding: 0 15px;
-        margin: 20px auto;
-      }
-
-      .title {
-        font-size: 26px;
-      }
-
-      .subtitle {
-        font-size: 16px;
-      }
-
-      .question-card {
-        padding: 15px;
-        margin: 15px 0;
-      }
-
-      label {
-        font-size: 15px;
-        margin: 10px 0;
-      }
-
-      input[type="radio"],
-      input[type="checkbox"] {
-        transform: scale(1.2);
-      }
-
-      .part-buttons {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .part-buttons button,
-      .part-buttons a button {
-        padding: 14px 40px;
-        font-size: 16px;
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .title {
-        font-size: 22px;
-      }
-
-      .part-buttons button,
-      .part-buttons a button {
-        padding: 12px 30px;
-        font-size: 15px;
-      }
-    }
+    html, body { margin: 0; padding: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f8f8f8; min-height: 100vh; overflow-x: hidden; }
+    .header-panel { position: sticky; top: 0; z-index: 1000; width: 100%; background: linear-gradient(135deg, #a81011 0%, #c21818 100%); color: white; display: flex; align-items: center; justify-content: space-between; padding: 12px 30px; box-sizing: border-box; min-height: 80px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+    .logo { height: 50px; cursor: pointer; transition: transform 0.2s; }
+    .logo:hover { transform: scale(1.05); }
+    .header-center { flex: 1; text-align: center; font-size: 22px; font-weight: bold; letter-spacing: 1px; }
+    .full-audio { width: 260px; height: 40px; }
+    .main-content { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    .title { text-align: center; color: #a81011; font-size: 32px; margin-bottom: 10px; font-weight: bold; }
+    .subtitle { text-align: center; color: #444; font-size: 18px; margin-bottom: 30px; }
+    .question-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.12); margin: 20px 0; padding: 20px; }
+    .question-card h3 { margin-top: 0; color: #a81011; font-size: 20px; margin-bottom: 15px; }
+    label { display: block; margin: 12px 0; font-size: 16px; cursor: pointer; }
+    input[type="radio"], input[type="checkbox"] { margin-right: 10px; transform: scale(1.3); accent-color: #a81011; }
+    .part-buttons { text-align: center; margin: 50px 0; display: flex; justify-content: center; gap: 30px; }
+    .part-buttons button, .part-buttons a button { padding: 16px 50px; background: #a81011; color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(168,16,17,0.3); }
+    .part-buttons button:hover, .part-buttons a button:hover { background: #870d0e; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(168,16,17,0.4); }
+    .part-buttons button.loading { background: #870d0e; cursor: not-allowed; }
+    #resultMessage { max-width: 600px; margin: 40px auto; padding: 25px; background: #e6f4ea; color: #155724; border-radius: 12px; font-size: 20px; font-weight: bold; text-align: center; display: none; box-shadow: 0 6px 20px rgba(0,0,0,0.1); border: 2px solid #28a745; }
+    #contextMenu { position: absolute; display: none; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 5000; padding: 5px 0; min-width: 140px; }
+    #contextMenu button { display: block; width: 100%; padding: 10px 20px; border: none; background: none; cursor: pointer; text-align: left; font-size: 15px; color: #333; }
+    #contextMenu button:hover { background: #f5f5f5; }
+    .highlighted { background-color: #fff176; padding: 2px 4px; border-radius: 3px; }
   </style>
-  <!-- Firebase App (основной модуль) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-<!-- Firestore (база данных) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
-<!-- Analytics (опционально, можно убрать, если не нужен) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics-compat.js"></script>
 </head>
 <body>
 
-<div id="contextMenu"><button onclick="highlightSelection()">✨ Highlight</button></div>
+<div id="contextMenu">
+  <button onclick="highlightSelection()">✨ Highlight</button>
+</div>
 
 <div class="header-panel">
   <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
@@ -334,18 +56,13 @@
 </div>
 
 <div class="main-content">
-  <div class="title">
-    Part 3: Questions 21–30
-  </div>
+  <div class="title">Part 3: Questions 21–30</div>
   <div class="subtitle">
     <strong>Choose the correct letter, A, B or C.</strong>
   </div>
 
-  <!-- Questions 21-22 -->
   <div class="question-card">
-    <h3>Questions 21 and 22</h3>
-    <p><strong>Choose TWO letters, A–E.</strong></p>
-    <p>Which TWO things do the students both believe are responsible for the increase in loneliness?</p>
+    <h3>21–22. Which TWO things do the students both believe are responsible for the increase in loneliness?</h3>
     <label><input type="checkbox" name="q21_22" value="A"> A. Social media</label>
     <label><input type="checkbox" name="q21_22" value="B"> B. Smaller nuclear families</label>
     <label><input type="checkbox" name="q21_22" value="C"> C. Urban design</label>
@@ -353,11 +70,8 @@
     <label><input type="checkbox" name="q21_22" value="E"> E. A mobile workforce</label>
   </div>
 
-  <!-- Questions 23-24 -->
   <div class="question-card">
-    <h3>Questions 23 and 24</h3>
-    <p><strong>Choose TWO letters, A–E.</strong></p>
-    <p>Which TWO health risks associated with loneliness do the students agree are based on solid evidence?</p>
+    <h3>23–24. Which TWO health risks associated with loneliness do the students agree are based on solid evidence?</h3>
     <label><input type="checkbox" name="q23_24" value="A"> A. A weakened immune system</label>
     <label><input type="checkbox" name="q23_24" value="B"> B. Dementia</label>
     <label><input type="checkbox" name="q23_24" value="C"> C. Cancer</label>
@@ -365,105 +79,55 @@
     <label><input type="checkbox" name="q23_24" value="E"> E. Cardiovascular disease</label>
   </div>
 
-  <!-- Questions 25-26 -->
   <div class="question-card">
-    <h3>Questions 25 and 26</h3>
-    <p><strong>Choose TWO letters, A–E.</strong></p>
-    <p>Which TWO opinions do both the students express about the evolutionary theory of loneliness?</p>
-    <label><input type="checkbox" name="q25_26" value="A"> A. It has little practical relevance</label>
-    <label><input type="checkbox" name="q25_26" value="B"> B. It needs further investigation</label>
-    <label><input type="checkbox" name="q25_26" value="C"> C. It is misleading</label>
-    <label><input type="checkbox" name="q25_26" value="D"> D. It should be more widely accepted</label>
-    <label><input type="checkbox" name="q25_26" value="E"> E. It is difficult to understand</label>
+    <h3>25–26. Which TWO opinions do both the students express about the evolutionary theory of loneliness?</h3>
+    <label><input type="checkbox" name="q25_26" value="A"> A. It has little practical relevance.</label>
+    <label><input type="checkbox" name="q25_26" value="B"> B. It needs further investigation.</label>
+    <label><input type="checkbox" name="q25_26" value="C"> C. It is misleading.</label>
+    <label><input type="checkbox" name="q25_26" value="D"> D. It should be more widely accepted.</label>
+    <label><input type="checkbox" name="q25_26" value="E"> E. It is difficult to understand.</label>
   </div>
 
-  <!-- Questions 27–30 -->
   <div class="question-card">
-    <h3>Questions 27–30</h3>
-    <p><strong>Choose the correct letter, A, B or C.</strong></p>
-
     <h3>27. When comparing loneliness to depression, the students</h3>
-    <label><input type="radio" name="q27" value="A"> A. Doubt that there will ever be a medical cure for loneliness</label>
-    <label><input type="radio" name="q27" value="B"> B. Claim that the link between loneliness and mental health is overstated</label>
-    <label><input type="radio" name="q27" value="C"> C. Express frustration that loneliness is not taken more seriously</label>
+    <label><input type="radio" name="q27" value="A"> A. Doubt that there will ever be a medical cure for loneliness.</label>
+    <label><input type="radio" name="q27" value="B"> B. Claim that the link between loneliness and mental health is overstated.</label>
+    <label><input type="radio" name="q27" value="C"> C. Express frustration that loneliness is not taken more seriously.</label>
+  </div>
 
+  <div class="question-card">
     <h3>28. Why do the students decide to start their presentation with an example from their own experience?</h3>
     <label><input type="radio" name="q28" value="A"> A. To explain how difficult loneliness can be</label>
     <label><input type="radio" name="q28" value="B"> B. To highlight a situation that most students will recognise</label>
     <label><input type="radio" name="q28" value="C"> C. To emphasise that feeling lonely is more common for men than women</label>
+  </div>
 
+  <div class="question-card">
     <h3>29. The students agree that talking to strangers is a good strategy for dealing with loneliness because</h3>
-    <label><input type="radio" name="q29" value="A"> A. It creates a sense of belonging</label>
-    <label><input type="radio" name="q29" value="B"> B. It builds self-confidence</label>
-    <label><input type="radio" name="q29" value="C"> C. It makes people feel more positive</label>
+    <label><input type="radio" name="q29" value="A"> A. It creates a sense of belonging.</label>
+    <label><input type="radio" name="q29" value="B"> B. It builds self-confidence.</label>
+    <label><input type="radio" name="q29" value="C"> C. It makes people feel more positive.</label>
+  </div>
 
+  <div class="question-card">
     <h3>30. The students find it difficult to understand why solitude is considered to be</h3>
-    <label><input type="radio" name="q30" value="A"> A. Similar to loneliness</label>
-    <label><input type="radio" name="q30" value="B"> B. Necessary for mental health</label>
-    <label><input type="radio" name="q30" value="C"> C. An enjoyable experience</label>
+    <label><input type="radio" name="q30" value="A"> A. Similar to loneliness.</label>
+    <label><input type="radio" name="q30" value="B"> B. Necessary for mental health.</label>
+    <label><input type="radio" name="q30" value="C"> C. An enjoyable experience.</label>
   </div>
 
   <div class="part-buttons">
-    <a href="part2.html" onclick="saveAnswers();">
-      <button>← Part 2</button>
-    </a>
-    <button onclick="saveAnswers(); checkPart3();">
-      Part 4 →
-    </button>
+    <a href="part2.html"><button>← Part 2</button></a>
+    <button id="nextBtnPart3">Part 4 →</button>
   </div>
+
+  <div id="resultMessage"></div>
 </div>
 
 <script>
-// ================== Firebase ==================
-const firebaseConfig = {
-  apiKey: "AIzaSyC8o2F60E8Pi_TfEDA_z6EeokG-gECUXjg",
-  authDomain: "oxbridge-listening-practice.firebaseapp.com",
-  projectId: "oxbridge-listening-practice",
-  storageBucket: "oxbridge-listening-practice.firebasestorage.app",
-  messagingSenderId: "32964456597",
-  appId: "1:32964456597:web:3a315700117ff92a6a2b9c",
-  measurementId: "G-HBCHQ49MWS"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-// ================== /Firebase ==================
-
-// Запрет перемотки аудио назад
-const audio = document.getElementById("examAudio");
-let lastTime = 0;
-audio.addEventListener("timeupdate", () => { lastTime = Math.max(lastTime, audio.currentTime); });
-audio.addEventListener("seeking", () => {
-  if (audio.currentTime < lastTime) audio.currentTime = lastTime;
-});
-
-// Контекстное меню + подсветка
-document.addEventListener("contextmenu", e => {
-  e.preventDefault();
-  const menu = document.getElementById("contextMenu");
-  menu.style.top = `${e.pageY}px`;
-  menu.style.left = `${e.pageX}px`;
-  menu.style.display = "block";
-});
-document.addEventListener("click", () => document.getElementById("contextMenu").style.display = "none");
-
-function highlightSelection() {
-  const selection = window.getSelection();
-  if (selection.rangeCount === 0 || selection.isCollapsed) return;
-
-  const range = selection.getRangeAt(0);
-  const span = document.createElement("span");
-  span.className = "highlighted";
-
-  try {
-    range.surroundContents(span);
-  } catch (e) {
-    const fragment = range.extractContents();
-    span.appendChild(fragment);
-    range.insertNode(span);
-  }
-
-  selection.removeAllRanges();
+// Проверка Firebase
+if (typeof firebase === "undefined") {
+  console.error("Firebase SDK не загрузился!");
 }
 
 // Правильные ответы
@@ -478,37 +142,47 @@ const correctAnswers = {
 };
 
 function checkPart3() {
+  console.log("Кнопка Part 3 нажата → checkPart3 запущена");
+
   const takerName = localStorage.getItem("takerName") || "Anonymous";
 
   let score = 0;
   let total = 10;
   let answers = {};
 
-  // Checkboxes
-  const checkboxPairs = [
-    { name: "q21_22", correct: correctAnswers.q21_22 },
-    { name: "q23_24", correct: correctAnswers.q23_24 },
-    { name: "q25_26", correct: correctAnswers.q25_26 }
-  ];
+  try {
+    // Checkboxes (21-26)
+    const checkboxPairs = [
+      { name: "q21_22", correct: correctAnswers.q21_22 },
+      { name: "q23_24", correct: correctAnswers.q23_24 },
+      { name: "q25_26", correct: correctAnswers.q25_26 }
+    ];
 
-  checkboxPairs.forEach(pair => {
-    const checked = Array.from(document.querySelectorAll(`input[name="${pair.name}"]:checked`))
-      .map(inp => inp.value);
-    const user = checked.join(", ");
-    answers[pair.name] = { user, correct: pair.correct.join(", ") };
+    checkboxPairs.forEach(pair => {
+      const checked = Array.from(document.querySelectorAll(`input[name="${pair.name}"]:checked`))
+        .map(inp => inp.value)
+        .sort();
+      const user = checked.join(", ");
+      answers[pair.name] = { user, correct: pair.correct.join(", ") };
 
-    if (checked.length === pair.correct.length && pair.correct.every(c => checked.includes(c))) {
-      score += pair.correct.length;
+      if (checked.length === pair.correct.length &&
+          checked.every((val, idx) => val === pair.correct[idx])) {
+        score += pair.correct.length;
+      }
+    });
+
+    // Radio (27-30)
+    for (let i = 27; i <= 30; i++) {
+      const key = `q${i}`;
+      const selected = document.querySelector(`input[name="${key}"]:checked`);
+      const user = selected ? selected.value : "";
+      answers[key] = { user, correct: correctAnswers[key] };
+      if (user === correctAnswers[key]) score++;
     }
-  });
 
-  // Radio
-  for (let i = 27; i <= 30; i++) {
-    const key = `q${i}`;
-    const selected = document.querySelector(`input[name="${key}"]:checked`);
-    const user = selected ? selected.value : "";
-    answers[key] = { user, correct: correctAnswers[key] };
-    if (user === correctAnswers[key]) score++;
+    console.log("Баллы посчитаны:", score, "/", total);
+  } catch (e) {
+    console.error("Ошибка подсчёта баллов:", e);
   }
 
   const band = Math.round((score / total) * 9 * 2) / 2;
@@ -519,31 +193,61 @@ function checkPart3() {
     correct: score,
     total: total,
     band: band,
-    date: new Date().toLocaleString("en-US"),
-    answers: answers
+    date: new Date().toISOString(),
+    answers
   };
 
-  saveReport(report);
+  const btn = document.getElementById("nextBtnPart3");
+  if (!btn) {
+    console.error("Кнопка #nextBtnPart3 не найдена в HTML!");
+    alert("Ошибка: кнопка не найдена");
+    return;
+  }
 
-  window.location.href = "part4.html";
+  const original = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+  btn.disabled = true;
+
+  const msg = document.getElementById("resultMessage");
+  if (msg) {
+    msg.innerHTML = `Part 3: ${score} из ${total} (Band ≈ ${band})<br>Сохранение...`;
+    msg.style.display = "block";
+  }
+
+  // Сохранение
+  try {
+    // Локально
+    let reports = JSON.parse(localStorage.getItem("reports")) || [];
+    reports.push(report);
+    localStorage.setItem("reports", JSON.stringify(reports));
+    console.log("Сохранено в localStorage");
+
+    // Firestore — главное!
+    if (typeof db !== "undefined" && db) {
+      db.collection("reports").add({
+        ...report,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: new Date().toISOString()
+      })
+      .then(() => console.log("Part 3 успешно сохранён в Firestore"))
+      .catch(err => console.error("Firestore ошибка:", err.code, err.message));
+    } else {
+      console.warn("db не найден — только локальное сохранение");
+    }
+  } catch (e) {
+    console.error("Ошибка сохранения:", e);
+  }
+
+  // Переход
+  setTimeout(() => {
+    btn.innerHTML = original;
+    btn.disabled = false;
+    if (msg) msg.style.display = "none";
+    window.location.href = "part4.html";
+  }, 2000);
 }
 
-function saveReport(newReport) {
-  let reports = JSON.parse(localStorage.getItem("reports")) || [];
-  const index = reports.findIndex(r => r.part === newReport.part && r.student === newReport.student);
-  if (index >= 0) reports[index] = newReport;
-  else reports.push(newReport);
-  localStorage.setItem("reports", JSON.stringify(reports));
-
-  db.collection("reports").add({
-    ...newReport,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    createdAt: new Date().toISOString()
-  })
-  .then(() => console.log("Part 3 saved to cloud"))
-  .catch(error => console.error("Cloud save error (Part 3):", error));
-}
-
+// Сохранение ответов при вводе
 function saveAnswers() {
   document.querySelectorAll("input").forEach(inp => {
     if (inp.type === "radio" && inp.checked) {
@@ -558,7 +262,48 @@ function saveAnswers() {
   });
 }
 
+// Контекстное меню
+document.addEventListener("contextmenu", e => {
+  e.preventDefault();
+  const selection = window.getSelection();
+  const hasSelection = selection.toString().trim().length > 0;
+  const menu = document.getElementById("contextMenu");
+  if (hasSelection) {
+    menu.style.left = `${e.pageX}px`;
+    menu.style.top = `${e.pageY}px`;
+    menu.style.display = "block";
+    setTimeout(() => menu.style.display = "none", 5000);
+  } else {
+    menu.style.display = "none";
+  }
+});
+
+document.addEventListener("click", () => {
+  document.getElementById("contextMenu").style.display = "none";
+});
+
+function highlightSelection() {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const span = document.createElement("span");
+    span.className = "highlighted";
+    try {
+      range.surroundContents(span);
+    } catch (e) {
+      const fragment = range.extractContents();
+      span.appendChild(fragment);
+      range.insertNode(span);
+    }
+    selection.removeAllRanges();
+  }
+  document.getElementById("contextMenu").style.display = "none";
+}
+
+window.onbeforeunload = null;
+
 window.onload = function() {
+  // Восстанавливаем ответы
   document.querySelectorAll("input").forEach(inp => {
     const saved = localStorage.getItem(inp.name);
     if (saved) {
@@ -568,11 +313,27 @@ window.onload = function() {
       }
     }
   });
-};
 
-document.getElementById("logo").addEventListener("click", () => {
-  window.location.href = "index.html";
-});
+  // Кнопка — проверка и привязка
+  const btn = document.getElementById("nextBtnPart3");
+  if (btn) {
+    btn.addEventListener("click", checkPart3);
+    console.log("Кнопка #nextBtnPart3 найдена и событие добавлено");
+  } else {
+    console.error("Кнопка #nextBtnPart3 НЕ НАЙДЕНА в HTML!");
+  }
+
+  const audio = document.getElementById("examAudio");
+  let lastTime = 0;
+  audio.addEventListener("timeupdate", () => lastTime = Math.max(lastTime, audio.currentTime));
+  audio.addEventListener("seeking", () => {
+    if (audio.currentTime < lastTime) audio.currentTime = lastTime;
+  });
+
+  document.getElementById("logo").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+};
 </script>
 
 </body>

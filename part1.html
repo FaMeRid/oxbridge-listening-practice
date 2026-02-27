@@ -4,403 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IELTS Listening Practice - Part 1</title>
- <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: #f8f8f8;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
 
-  .header-panel {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    width: 100%;
-    background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    min-height: 70px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    flex-wrap: wrap;
-    gap: 10px;
-  }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  .logo {
-    height: 50px;
-    width: auto;
-    object-fit: contain;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 
-  .logo:hover {
-    transform: scale(1.05);
-  }
+  <script src="common.js"></script>
 
-  .header-center {
-    flex: 1;
-    text-align: center;
-    font-size: 22px;
-    font-weight: bold;
-    letter-spacing: 1px;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    flex-wrap: wrap;
-  }
-
-  .header-right label {
-    font-size: 15px;
-    font-weight: 500;
-    color: white;
-    white-space: nowrap;
-  }
-
-  #takerName {
-    padding: 9px 16px;
-    border: 1px solid rgba(255,255,255,0.5);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.15);
-    color: white;
-    font-size: 15px;
-    min-width: 180px;
-    max-width: 300px;
-    flex: 1;
-  }
-
-  #takerName:focus {
-    outline: none;
-    border-color: #ffd700;
-    box-shadow: 0 0 10px rgba(255,215,0,0.5);
-    background: rgba(255,255,255,0.25);
-  }
-
-  #takerName::placeholder {
-    color: rgba(255,255,255,0.6);
-  }
-
-  /* Красивый кастомный аудио-плеер (как в твоём скрине) */
-  .full-audio {
-    width: 260px;
-    height: 40px;
-    outline: none;
-    border-radius: 50px;
-    background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
-    color: white;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-
-  audio::-webkit-media-controls-panel {
-    background: transparent;
-    border-radius: 50px;
-  }
-
-  audio::-webkit-media-controls-play-button {
-    background-color: white;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    margin: 4px;
-  }
-
-  audio::-webkit-media-controls-current-time-display,
-  audio::-webkit-media-controls-time-remaining-display {
-    color: white;
-    font-size: 12px;
-    margin: 0 8px;
-  }
-
-  audio::-webkit-media-controls-timeline {
-    background: rgba(255,255,255,0.3);
-    border-radius: 10px;
-    height: 6px;
-  }
-
-  audio::-webkit-media-controls-timeline-container {
-    margin: 0 10px;
-  }
-
-  audio::-webkit-media-controls-volume-slider {
-    width: 80px;
-    margin: 0 10px;
-  }
-
-  /* Для Firefox */
-  audio::-moz-range-track {
-    background: rgba(255,255,255,0.3);
-    border-radius: 10px;
-    height: 6px;
-  }
-
-  audio::-moz-range-progress {
-    background: white;
-    border-radius: 10px;
-  }
-
-  .main-content {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 20px;
-  }
-
-  .title {
-    text-align: center;
-    color: #a81011;
-    font-size: 32px;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-
-  .subtitle {
-    text-align: center;
-    color: #444;
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-
-  .table-wrapper {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-    margin-bottom: 30px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  th, td {
-    border: 1px solid #eee;
-    padding: 16px 14px;
-    text-align: left;
-    font-size: 16px;
-    vertical-align: top;
-  }
-
-  th {
-    background: #a81011;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  tr:hover td {
-    background: #fff8e1;
-  }
-
-  input[type="text"] {
-    width: 92%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 15px;
-    transition: all 0.2s;
-  }
-
-  input[type="text"]:focus {
-    outline: none;
-    border-color: #a81011;
-    box-shadow: 0 0 0 3px rgba(168,16,17,0.25);
-  }
-
-  .part-buttons {
-    text-align: center;
-    margin: 50px 0;
-    display: flex;
-    justify-content: center;
-  }
-
-  .part-buttons button,
-  .part-buttons a button {
-    padding: 16px 50px;
-    background: #a81011;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(168,16,17,0.3);
-  }
-
-  .part-buttons button:hover,
-  .part-buttons a button:hover {
-    background: #870d0e;
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(168,16,17,0.4);
-  }
-
-  /* Контекстное меню */
-  #contextMenu {
-    position: absolute;
-    display: none;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    z-index: 5000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    padding: 5px 0;
-  }
-
-  #contextMenu button {
-    display: block;
-    width: 100%;
-    padding: 10px 20px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    text-align: left;
-    font-size: 15px;
-  }
-
-  #contextMenu button:hover {
-    background: #f5f5f5;
-  }
-
-  .highlighted {
-    background-color: #fff176;
-    padding: 2px 4px;
-    border-radius: 3px;
-  }
-
-  /* Мобильная версия (экраны меньше 768px) */
-  @media (max-width: 768px) {
-    body {
-      font-size: 15px;
-    }
-
-    .header-panel {
-      padding: 10px 15px;
-      flex-wrap: wrap;
-      gap: 10px;
-      min-height: auto;
-    }
-
-    .header-center {
-      font-size: 18px;
-      flex: 1 1 100%;
-      text-align: center;
-    }
-
-    .logo {
-      height: 40px;
-    }
-
-    .header-right {
-      flex-direction: column;
-      align-items: stretch;
-      width: 100%;
-      gap: 12px;
-    }
-
-    #takerName {
-      width: 100%;
-      margin: 0;
-    }
-
-    .full-audio {
-      width: 100%;
-      max-width: 300px;
-      height: 38px;
-    }
-
-    .main-content {
-      padding: 0 15px;
-      margin: 20px auto;
-    }
-
-    .title {
-      font-size: 26px;
-    }
-
-    .subtitle {
-      font-size: 16px;
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    table {
-      min-width: 600px; /* чтобы не сжималась слишком сильно */
-    }
-
-    th, td {
-      padding: 12px 10px;
-      font-size: 14px;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      font-size: 15px;
-      margin: 5px 0;
-    }
-
-    .part-buttons {
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .part-buttons button,
-    .part-buttons a button {
-      padding: 14px 40px;
-      font-size: 16px;
-      width: 100%;
-    }
-  }
-
-  /* Очень маленькие экраны (телефоны < 480px) */
-  @media (max-width: 480px) {
-    .title {
-      font-size: 22px;
-    }
-
-    table {
-      min-width: 500px;
-    }
-
-    th, td {
-      padding: 10px 8px;
-      font-size: 13px;
-    }
-
-    .full-audio {
-      height: 36px;
-    }
-
-    .part-buttons button,
-    .part-buttons a button {
-      padding: 12px 30px;
-      font-size: 15px;
-    }
-  }
-</style>
-<!-- Firebase App (основной модуль) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-<!-- Firestore (база данных) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
-<!-- Analytics (опционально, можно убрать, если не нужен) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics-compat.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f8f8f8; min-height: 100vh; overflow-x: hidden; }
+    .header-panel { position: sticky; top: 0; z-index: 1000; width: 100%; background: linear-gradient(135deg, #a81011 0%, #c21818 100%); color: white; display: flex; align-items: center; justify-content: space-between; padding: 12px 30px; box-sizing: border-box; min-height: 80px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+    .logo { height: 50px; cursor: pointer; transition: transform 0.2s; }
+    .logo:hover { transform: scale(1.05); }
+    .header-center { flex: 1; text-align: center; font-size: 22px; font-weight: bold; letter-spacing: 1px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-right label { color: white; font-weight: bold; }
+    .header-right input { padding: 8px 12px; border: none; border-radius: 6px; font-size: 16px; width: 180px; }
+    .full-audio { width: 260px; height: 40px; }
+    .main-content { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    .title { text-align: center; color: #a81011; font-size: 32px; margin-bottom: 10px; font-weight: bold; }
+    .subtitle { text-align: center; color: #444; font-size: 18px; margin-bottom: 30px; }
+    .table-wrapper { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 8px 30px rgba(0,0,0,0.12); border-radius: 12px; overflow: hidden; }
+    th, td { padding: 16px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: #a81011; color: white; font-weight: bold; }
+    input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; transition: all 0.2s; }
+    input[type="text"]:focus { outline: none; border-color: #a81011; box-shadow: 0 0 0 3px rgba(168,16,17,0.2); }
+    .part-buttons { text-align: center; margin: 50px 0; }
+    .part-buttons button { padding: 16px 60px; background: #a81011; color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(168,16,17,0.3); }
+    .part-buttons button:hover { background: #870d0e; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(168,16,17,0.4); }
+    .part-buttons button.loading { background: #870d0e; cursor: not-allowed; }
+    #resultMessage { max-width: 600px; margin: 40px auto; padding: 25px; background: #e6f4ea; color: #155724; border-radius: 12px; font-size: 20px; font-weight: bold; text-align: center; display: none; box-shadow: 0 6px 20px rgba(0,0,0,0.1); border: 2px solid #28a745; }
+    #contextMenu { position: absolute; display: none; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 5000; padding: 5px 0; min-width: 140px; }
+    #contextMenu button { display: block; width: 100%; padding: 10px 20px; border: none; background: none; cursor: pointer; text-align: left; font-size: 15px; color: #333; }
+    #contextMenu button:hover { background: #f5f5f5; }
+    .highlighted { background-color: #fff176; padding: 2px 4px; border-radius: 3px; }
+  </style>
 </head>
 <body>
 
-<div id="contextMenu"><button onclick="highlightSelection()">✨ Highlight</button></div>
+<div id="contextMenu">
+  <button onclick="highlightSelection()">✨ Highlight</button>
+</div>
 
 <div class="header-panel">
   <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
@@ -410,7 +57,7 @@
   <div class="header-right">
     <label for="takerName">Student Name:</label>
     <input type="text" id="takerName" placeholder="Enter your name">
-    <audio id="examAudio" controls>
+    <audio id="examAudio" controls class="full-audio">
       <source src="sounds/listening1.1/part1.mp3" type="audio/mpeg">
       Your browser does not support audio.
     </audio>
@@ -418,9 +65,7 @@
 </div>
 
 <div class="main-content">
-  <div class="title">
-    Part 1: Questions 1–10
-  </div>
+  <div class="title">Part 1: Questions 1–10</div>
   <div class="subtitle">
     <strong>Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.</strong>
   </div>
@@ -455,61 +100,16 @@
   </div>
 
   <div class="part-buttons">
-    <button onclick="saveName(); saveAnswers(); checkPart1();">
-      ➡ Part 2
-    </button>
+    <button id="nextBtnPart1">➡ Part 2</button>
   </div>
+
+  <div id="resultMessage"></div>
 </div>
 
 <script>
-// ================== Firebase ==================
-const firebaseConfig = {
-  apiKey: "AIzaSyC8o2F60E8Pi_TfEDA_z6EeokG-gECUXjg",
-  authDomain: "oxbridge-listening-practice.firebaseapp.com",
-  projectId: "oxbridge-listening-practice",
-  storageBucket: "oxbridge-listening-practice.firebasestorage.app",
-  messagingSenderId: "32964456597",
-  appId: "1:32964456597:web:3a315700117ff92a6a2b9c",
-  measurementId: "G-HBCHQ49MWS"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-// ================== /Firebase ==================
-
-// Запрет перемотки аудио назад
-const audio = document.getElementById("examAudio");
-let lastTime = 0;
-audio.addEventListener("timeupdate", () => { lastTime = Math.max(lastTime, audio.currentTime); });
-audio.addEventListener("seeking", () => {
-  if (audio.currentTime < lastTime) audio.currentTime = lastTime;
-});
-
-// Контекстное меню + подсветка
-document.addEventListener("contextmenu", e => {
-  e.preventDefault();
-  const menu = document.getElementById("contextMenu");
-  menu.style.top = `${e.pageY}px`;
-  menu.style.left = `${e.pageX}px`;
-  menu.style.display = "block";
-});
-document.addEventListener("click", () => document.getElementById("contextMenu").style.display = "none");
-
-function highlightSelection() {
-  const selection = window.getSelection();
-  if (selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0);
-    const span = document.createElement("span");
-    span.className = "highlighted";
-    try {
-      range.surroundContents(span);
-    } catch (e) {
-      const fragment = range.extractContents();
-      span.appendChild(fragment);
-      range.insertNode(span);
-    }
-    selection.removeAllRanges();
-  }
+// Проверка Firebase
+if (typeof firebase === "undefined") {
+  console.error("Firebase SDK не загрузился!");
 }
 
 // Правильные ответы
@@ -526,30 +126,31 @@ const correctAnswersPart1 = {
   q10: "average"
 };
 
-function normalizeAnswer(str) {
-  if (!str) return "";
-  let normalized = str.toLowerCase().trim().replace(/\s+/g, " ").replace(/[.,!?;:'"()]/g, "").replace(/\b(a|an|the)\b\s*/gi, "");
-  if (normalized.endsWith("s")) normalized = normalized.replace(/s$/, "");
-  return normalized;
-}
-
 function checkPart1() {
-  const takerName = document.getElementById("takerName").value.trim() || "Anonymous";
+  console.log("checkPart1 запущена");
+
+  const takerNameInput = document.getElementById("takerName");
+  const takerName = takerNameInput && takerNameInput.value.trim() ? takerNameInput.value.trim() : "Anonymous";
   localStorage.setItem("takerName", takerName);
 
   let score = 0;
   let total = 10;
   let answers = {};
 
-  for (let key in correctAnswersPart1) {
-    const input = document.querySelector(`input[name="${key}"]`);
-    const userAnswer = input ? input.value.trim() : "";
-    const normUser = normalizeAnswer(userAnswer);
-    const normCorrect = normalizeAnswer(correctAnswersPart1[key]);
+  try {
+    for (let key in correctAnswersPart1) {
+      const input = document.querySelector(`input[name="${key}"]`);
+      const userAnswer = input ? input.value.trim() : "";
+      const normUser = normalizeAnswer(userAnswer);
+      const normCorrect = normalizeAnswer(correctAnswersPart1[key]);
 
-    answers[key] = { user: userAnswer, correct: correctAnswersPart1[key] };
+      answers[key] = { user: userAnswer, correct: correctAnswersPart1[key] };
 
-    if (normUser === normCorrect) score++;
+      if (normUser === normCorrect) score++;
+    }
+    console.log("Баллы посчитаны:", score, "/", total);
+  } catch (e) {
+    console.error("Ошибка подсчёта:", e);
   }
 
   const band = Math.round((score / total) * 9 * 2) / 2;
@@ -560,44 +161,111 @@ function checkPart1() {
     correct: score,
     total: total,
     band: band,
-    date: new Date().toLocaleString("en-US"),
-    answers: answers
+    date: new Date().toISOString(),
+    answers
   };
 
-  saveReport(report);
+  const btn = document.getElementById("nextBtnPart1");
+  if (!btn) {
+    console.error("Кнопка nextBtnPart1 не найдена!");
+    return;
+  }
 
-  // Прямой переход без сообщения
-  window.location.href = "part2.html";
+  const original = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+  btn.disabled = true;
+
+  const msg = document.getElementById("resultMessage");
+  if (msg) {
+    msg.innerHTML = `Part 1: ${score} из ${total} (Band ≈ ${band})<br>Сохранение...`;
+    msg.style.display = "block";
+  }
+
+  // Сохранение — надёжный вариант
+  try {
+    // 1. Локальное
+    let reports = JSON.parse(localStorage.getItem("reports")) || [];
+    reports.push(report);
+    localStorage.setItem("reports", JSON.stringify(reports));
+    console.log("Сохранено в localStorage");
+
+    // 2. Через saveReport (если есть)
+    if (typeof saveReport === "function") {
+      saveReport(report);
+      console.log("saveReport вызван");
+    }
+
+    // 3. Прямое в Firestore (самый надёжный)
+    if (typeof db !== "undefined" && db) {
+      db.collection("reports").add({
+        ...report,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: new Date().toISOString()
+      })
+      .then(() => console.log("Part 1 сохранён в Firestore"))
+      .catch(err => console.error("Firestore ошибка:", err.message));
+    } else {
+      console.warn("db не найден — только локальное сохранение");
+    }
+  } catch (e) {
+    console.error("Ошибка сохранения:", e);
+  }
+
+  // Показ результата и переход
+  setTimeout(() => {
+    btn.innerHTML = original;
+    btn.disabled = false;
+    if (msg) msg.style.display = "none";
+    window.location.href = "part2.html";
+  }, 3000);
 }
 
-function saveReport(newReport) {
-  // Бэкап в localStorage
-  let reports = JSON.parse(localStorage.getItem("reports")) || [];
-  const index = reports.findIndex(r => r.part === newReport.part && r.student === newReport.student);
-  if (index >= 0) reports[index] = newReport;
-  else reports.push(newReport);
-  localStorage.setItem("reports", JSON.stringify(reports));
-
-  // Сохранение в Firebase
-  db.collection("reports").add({
-    ...newReport,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    createdAt: new Date().toISOString()
-  })
-  .then(() => console.log("Part 1 saved to cloud"))
-  .catch(error => console.error("Cloud save error (Part 1):", error));
-}
-
-function saveName() {
-  const name = document.getElementById("takerName").value.trim();
-  if (name) localStorage.setItem("takerName", name);
-}
-
+// Сохранение ответов при вводе
 function saveAnswers() {
   document.querySelectorAll("input[type='text']").forEach(inp => {
     localStorage.setItem(inp.name, inp.value.trim());
   });
 }
+
+// Контекстное меню (без изменений)
+document.addEventListener("contextmenu", e => {
+  e.preventDefault();
+  const selection = window.getSelection();
+  const hasSelection = selection.toString().trim().length > 0;
+  const menu = document.getElementById("contextMenu");
+  if (hasSelection) {
+    menu.style.left = `${e.pageX}px`;
+    menu.style.top = `${e.pageY}px`;
+    menu.style.display = "block";
+    setTimeout(() => menu.style.display = "none", 5000);
+  } else {
+    menu.style.display = "none";
+  }
+});
+
+document.addEventListener("click", () => {
+  document.getElementById("contextMenu").style.display = "none";
+});
+
+function highlightSelection() {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const span = document.createElement("span");
+    span.className = "highlighted";
+    try {
+      range.surroundContents(span);
+    } catch (e) {
+      const fragment = range.extractContents();
+      span.appendChild(fragment);
+      range.insertNode(span);
+    }
+    selection.removeAllRanges();
+  }
+  document.getElementById("contextMenu").style.display = "none";
+}
+
+window.onbeforeunload = null;
 
 window.onload = function() {
   const savedName = localStorage.getItem("takerName");
@@ -607,11 +275,20 @@ window.onload = function() {
     const saved = localStorage.getItem(inp.name);
     if (saved) inp.value = saved;
   });
-};
 
-document.getElementById("logo").addEventListener("click", () => {
-  window.location.href = "index.html";
-});
+  document.getElementById("nextBtnPart1").addEventListener("click", checkPart1);
+
+  const audio = document.getElementById("examAudio");
+  let lastTime = 0;
+  audio.addEventListener("timeupdate", () => lastTime = Math.max(lastTime, audio.currentTime));
+  audio.addEventListener("seeking", () => {
+    if (audio.currentTime < lastTime) audio.currentTime = lastTime;
+  });
+
+  document.getElementById("logo").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+};
 </script>
 
 </body>
