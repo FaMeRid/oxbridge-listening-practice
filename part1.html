@@ -41,6 +41,102 @@
     #contextMenu button { display: block; width: 100%; padding: 10px 20px; border: none; background: none; cursor: pointer; text-align: left; font-size: 15px; color: #333; }
     #contextMenu button:hover { background: #f5f5f5; }
     .highlighted { background-color: #fff176; padding: 2px 4px; border-radius: 3px; }
+    /* ===== MOBILE RESPONSIVE PART1 ===== */
+@media only screen and (max-width: 768px) {
+  .header-panel {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+  }
+  .header-center {
+    font-size: 18px;
+  }
+  .header-right {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    align-items: center;
+  }
+  .header-right label {
+    font-size: 16px;
+  }
+  .header-right input {
+    width: 85%;
+    font-size: 16px;
+  }
+  .full-audio {
+    width: 85%;
+    margin-top: 8px;
+  }
+
+  .main-content {
+    padding: 0 12px;
+    margin-top: 20px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+  .subtitle {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  /* Таблица становится адаптивнее */
+  table {
+    font-size: 14px;
+  }
+  th, td {
+    padding: 12px 8px;
+  }
+
+  /* таблица в одну колонку на маленьких экранах */
+  .table-wrapper table,
+  .table-wrapper thead,
+  .table-wrapper tbody,
+  .table-wrapper th,
+  .table-wrapper td,
+  .table-wrapper tr {
+    display: block;
+  }
+  .table-wrapper thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  .table-wrapper tr {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+  }
+  .table-wrapper td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+  }
+  .table-wrapper td:before {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+
+  /* подписи для ячеек таблицы */
+  .table-wrapper td:nth-of-type(1):before { content: "Restaurant"; }
+  .table-wrapper td:nth-of-type(2):before { content: "Location"; }
+  .table-wrapper td:nth-of-type(3):before { content: "Reason"; }
+  .table-wrapper td:nth-of-type(4):before { content: "Comments"; }
+
+  /* кнопки */
+  .part-buttons button {
+    padding: 14px 45px;
+    font-size: 16px;
+  }
+}
   </style>
 </head>
 <body>
