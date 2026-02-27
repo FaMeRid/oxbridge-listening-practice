@@ -1,348 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IELTS Listening Practice - Part 1</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IELTS Listening Practice - Part 1</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 
-<script src="common.js"></script>
+  <script src="common.js"></script>
 
-<style>
-
-/* ===============================
-   BASE
-================================ */
-
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #f5f6fa;
-  min-height: 100vh;
-}
-
-.header-panel {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  width: 100%;
-  background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 30px;
-  box-sizing: border-box;
-  min-height: 80px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
-
-.logo {
-  height: 50px;
-  cursor: pointer;
-}
-
-.header-center {
-  flex: 1;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.header-right input {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  width: 180px;
-}
-
-.full-audio {
-  width: 260px;
-  height: 40px;
-}
-
-.main-content {
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-.title {
-  text-align: center;
-  color: #a81011;
-  font-size: 32px;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.subtitle {
-  text-align: center;
-  color: #444;
-  font-size: 18px;
-  margin-bottom: 30px;
-}
-
-/* ===============================
-   TABLE DESKTOP
-================================ */
-
-.table-wrapper {
-  overflow-x: auto;
-  margin: 20px 0;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-th, td {
-  padding: 16px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
-}
-
-th {
-  background: #a81011;
-  color: white;
-}
-
-input[type="text"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: 0.2s;
-}
-
-input[type="text"]:focus {
-  outline: none;
-  border-color: #a81011;
-  box-shadow: 0 0 0 3px rgba(168,16,17,0.15);
-}
-
-.part-buttons {
-  text-align: center;
-  margin: 50px 0;
-}
-
-.part-buttons button {
-  padding: 16px 60px;
-  background: #a81011;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.part-buttons button:hover {
-  background: #870d0e;
-}
-
-/* ===============================
-   MOBILE PROFESSIONAL VERSION
-================================ */
-
-@media (max-width: 768px) {
-
+  <style>
+    html, body { margin: 0; padding: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f8f8f8; min-height: 100vh; overflow-x: hidden; }
+    .header-panel { position: sticky; top: 0; z-index: 1000; width: 100%; background: linear-gradient(135deg, #a81011 0%, #c21818 100%); color: white; display: flex; align-items: center; justify-content: space-between; padding: 12px 30px; box-sizing: border-box; min-height: 80px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+    .logo { height: 50px; cursor: pointer; transition: transform 0.2s; }
+    .logo:hover { transform: scale(1.05); }
+    .header-center { flex: 1; text-align: center; font-size: 22px; font-weight: bold; letter-spacing: 1px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-right label { color: white; font-weight: bold; }
+    .header-right input { padding: 8px 12px; border: none; border-radius: 6px; font-size: 16px; width: 180px; }
+    .full-audio { width: 260px; height: 40px; }
+    .main-content { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    .title { text-align: center; color: #a81011; font-size: 32px; margin-bottom: 10px; font-weight: bold; }
+    .subtitle { text-align: center; color: #444; font-size: 18px; margin-bottom: 30px; }
+    .table-wrapper { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 8px 30px rgba(0,0,0,0.12); border-radius: 12px; overflow: hidden; }
+    th, td { padding: 16px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: #a81011; color: white; font-weight: bold; }
+    input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; transition: all 0.2s; }
+    input[type="text"]:focus { outline: none; border-color: #a81011; box-shadow: 0 0 0 3px rgba(168,16,17,0.2); }
+    .part-buttons { text-align: center; margin: 50px 0; }
+    .part-buttons button { padding: 16px 60px; background: #a81011; color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(168,16,17,0.3); }
+    .part-buttons button:hover { background: #870d0e; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(168,16,17,0.4); }
+    .part-buttons button.loading { background: #870d0e; cursor: not-allowed; }
+    #resultMessage { max-width: 600px; margin: 40px auto; padding: 25px; background: #e6f4ea; color: #155724; border-radius: 12px; font-size: 20px; font-weight: bold; text-align: center; display: none; box-shadow: 0 6px 20px rgba(0,0,0,0.1); border: 2px solid #28a745; }
+    #contextMenu { position: absolute; display: none; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 5000; padding: 5px 0; min-width: 140px; }
+    #contextMenu button { display: block; width: 100%; padding: 10px 20px; border: none; background: none; cursor: pointer; text-align: left; font-size: 15px; color: #333; }
+    #contextMenu button:hover { background: #f5f5f5; }
+    .highlighted { background-color: #fff176; padding: 2px 4px; border-radius: 3px; }
+    /* ===== MOBILE RESPONSIVE PART1 ===== */
+@media only screen and (max-width: 768px) {
   .header-panel {
     flex-direction: column;
-    gap: 12px;
-    padding: 15px;
-    text-align: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
   }
-
+  .header-center {
+    font-size: 18px;
+  }
   .header-right {
     flex-direction: column;
+    gap: 8px;
     width: 100%;
+    align-items: center;
   }
-
-  .header-right input,
+  .header-right label {
+    font-size: 16px;
+  }
+  .header-right input {
+    width: 85%;
+    font-size: 16px;
+  }
   .full-audio {
-    width: 100%;
-    max-width: 320px;
+    width: 85%;
+    margin-top: 8px;
   }
 
   .main-content {
-    padding: 15px;
-    margin-top: 15px;
+    padding: 0 12px;
+    margin-top: 20px;
   }
 
   .title {
-    font-size: 22px;
+    font-size: 26px;
   }
-
   .subtitle {
-    font-size: 14px;
+    font-size: 16px;
+    text-align: center;
   }
 
-  /* transform table */
-  table, thead {
-    display: none;
-  }
-
-  .table-wrapper {
+  /* Основная адаптация: таблица превращается в блоки */
+  .table-wrapper table,
+  .table-wrapper thead,
+  .table-wrapper tbody,
+  .table-wrapper th,
+  .table-wrapper td,
+  .table-wrapper tr {
     display: block;
   }
 
-  .mobile-card {
-    background: white;
-    padding: 18px;
-    border-radius: 14px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-    border: 1px solid #e6e6e6;
+  /* Скрываем обычный заголовок таблицы (но он всё ещё есть для accessibility) */
+  .table-wrapper thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
   }
 
-  .mobile-label {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #a81011;
-    margin-bottom: 4px;
-    display: block;
+  /* Каждая строка — отдельный блок */
+  .table-wrapper tr {
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
   }
 
-  .part-buttons button {
-    width: 100%;
-    border-radius: 10px;
+  /* Каждая ячейка — строка с label */
+  .table-wrapper td {
+    border: none;
+    padding: 8px 0;
+    position: relative;
+    padding-left: 50%;
+    white-space: normal;
+    text-align: left;
+    font-size: 15px;
   }
 
+  /* Добавляем label перед контентом,
+     используя content с названиями колонок */
+  .table-wrapper td:nth-of-type(1)::before {
+    content: "NAME OF RESTAURANT";
+    font-weight: bold;
+  }
+  .table-wrapper td:nth-of-type(2)::before {
+    content: "LOCATION";
+    font-weight: bold;
+  }
+  .table-wrapper td:nth-of-type(3)::before {
+    content: "REASON FOR RECOMMENDATION";
+    font-weight: bold;
+  }
+  .table-wrapper td:nth-of-type(4)::before {
+    content: "OTHER COMMENTS";
+    font-weight: bold;
+  }
+
+  /* Стили для псевдо‑элемента label */
+  .table-wrapper td::before {
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
-
-</style>
+  </style>
 </head>
-
 <body>
 
+<div id="contextMenu">
+  <button onclick="highlightSelection()">✨ Highlight</button>
+</div>
+
 <div class="header-panel">
-  <img id="logo" src="assets/logo.png" class="logo">
-  <div class="header-center">IELTS Listening Practice - Part 1</div>
+  <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
+  <div class="header-center">
+    IELTS Listening Practice - Part 1
+  </div>
   <div class="header-right">
-    <label>Student Name:</label>
+    <label for="takerName">Student Name:</label>
     <input type="text" id="takerName" placeholder="Enter your name">
     <audio id="examAudio" controls class="full-audio">
       <source src="sounds/listening1.1/part1.mp3" type="audio/mpeg">
+      Your browser does not support audio.
     </audio>
   </div>
 </div>
 
 <div class="main-content">
+  <div class="title">Part 1: Questions 1–10</div>
+  <div class="subtitle">
+    <strong>Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.</strong>
+  </div>
 
-<div class="title">Part 1: Questions 1–10</div>
-<div class="subtitle">
-<strong>Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.</strong>
-</div>
+  <div class="table-wrapper">
+    <table>
+      <tr>
+        <th>NAME OF RESTAURANT</th>
+        <th>LOCATION</th>
+        <th>REASON FOR RECOMMENDATION</th>
+        <th>OTHER COMMENTS</th>
+      </tr>
+      <tr>
+        <td>The Junction</td>
+        <td>Greyson Street, near the station</td>
+        <td>Good for people keen on <input type="text" name="q1"></td>
+        <td>Quite expensive. The <input type="text" name="q2"> is a good place for a drink</td>
+      </tr>
+      <tr>
+        <td>Paloma</td>
+        <td>Bow Street next to the cinema</td>
+        <td><input type="text" name="q3"> food, good for sharing</td>
+        <td>Friendly staff. £50 deposit. Limited <input type="text" name="q4"> food</td>
+      </tr>
+      <tr>
+        <td>The <input type="text" name="q5"></td>
+        <td><input type="text" name="q6"></td>
+        <td>Famous chef. All <input type="text" name="q7"> are very good. Only <input type="text" name="q8"> ingredients</td>
+        <td>Set lunch £<input type="text" name="q9"> per person. Portions of <input type="text" name="q10"> size</td>
+      </tr>
+    </table>
+  </div>
 
-<div class="table-wrapper">
-
-<!-- DESKTOP TABLE -->
-<table>
-<tr>
-<th>NAME OF RESTAURANT</th>
-<th>LOCATION</th>
-<th>REASON</th>
-<th>COMMENTS</th>
-</tr>
-<tr>
-<td>The Junction</td>
-<td>Greyson Street, near the station</td>
-<td>Good for people keen on <input type="text" name="q1"></td>
-<td>Quite expensive. The <input type="text" name="q2"> is a good place</td>
-</tr>
-<tr>
-<td>Paloma</td>
-<td>Bow Street next to the cinema</td>
-<td><input type="text" name="q3"> food, good for sharing</td>
-<td>Limited <input type="text" name="q4"> food</td>
-</tr>
-<tr>
-<td>The <input type="text" name="q5"></td>
-<td><input type="text" name="q6"></td>
-<td>All <input type="text" name="q7"> are good. Only <input type="text" name="q8"> ingredients</td>
-<td>Set lunch £<input type="text" name="q9">. Portions <input type="text" name="q10"></td>
-</tr>
-</table>
-
-<!-- MOBILE CARDS -->
-<div class="mobile-card">
-<span class="mobile-label">Restaurant</span>The Junction
-<span class="mobile-label">Location</span>Greyson Street, near the station
-<span class="mobile-label">Reason</span>
-Good for people keen on <input type="text" name="q1">
-<span class="mobile-label">Other Comments</span>
-The <input type="text" name="q2"> is a good place
-</div>
-
-<div class="mobile-card">
-<span class="mobile-label">Restaurant</span>Paloma
-<span class="mobile-label">Location</span>Bow Street next to the cinema
-<span class="mobile-label">Reason</span>
-<input type="text" name="q3"> food
-<span class="mobile-label">Other Comments</span>
-Limited <input type="text" name="q4"> food
-</div>
-
-<div class="mobile-card">
-<span class="mobile-label">Restaurant</span>
-The <input type="text" name="q5">
-<span class="mobile-label">Location</span>
-<input type="text" name="q6">
-<span class="mobile-label">Reason</span>
-All <input type="text" name="q7">. Only <input type="text" name="q8">
-<span class="mobile-label">Other Comments</span>
-£<input type="text" name="q9"> / <input type="text" name="q10">
-</div>
-
-</div>
-
-<div class="part-buttons">
-<button id="nextBtnPart1">➡ Part 2</button>
-</div>
-
+  <div class="part-buttons">
+    <button id="nextBtnPart1">➡ Part 2</button>
+  </div>
 </div>
 
 <script>
+// Проверка Firebase
+if (typeof firebase === "undefined") {
+  console.error("Firebase SDK не загрузился!");
+}
 
+// Правильные ответы
 const correctAnswersPart1 = {
-q1:"fish", q2:"roof", q3:"spanish", q4:"vegetarian",
-q5:"audley", q6:"hotel", q7:"reviews", q8:"local",
-q9:"30", q10:"average"
+  q1: "fish",
+  q2: "roof",
+  q3: "spanish",
+  q4: "vegetarian",
+  q5: "audley",
+  q6: "hotel",
+  q7: "reviews",
+  q8: "local",
+  q9: "30",
+  q10: "average"
 };
 
-function checkPart1(){
-let score=0;
-for(let key in correctAnswersPart1){
-let input=document.querySelector(`input[name="${key}"]`);
-if(input && input.value.trim().toLowerCase()===correctAnswersPart1[key]){
-score++;
-}
-}
-window.location.href="part2.html";
+function checkPart1() {
+  const takerNameInput = document.getElementById("takerName");
+  const takerName = takerNameInput && takerNameInput.value.trim()
+    ? takerNameInput.value.trim()
+    : "Anonymous";
+
+  localStorage.setItem("takerName", takerName);
+
+  let score = 0;
+  let answers = {};
+
+  for (let key in correctAnswersPart1) {
+    const input = document.querySelector(`input[name="${key}"]`);
+    const userAnswer = input ? input.value.trim() : "";
+
+    answers[key] = {
+      user: userAnswer,
+      correct: correctAnswersPart1[key]
+    };
+
+    if (
+      normalizeAnswer(userAnswer) ===
+      normalizeAnswer(correctAnswersPart1[key])
+    ) {
+      score++;
+    }
+  }
+
+  const report = {
+    part: "Part 1",
+    student: takerName,
+    correct: score,
+    total: 10,
+    band: Math.round((score / 10) * 9 * 2) / 2,
+    date: new Date().toISOString(),
+    answers
+  };
+
+  // ✅ ЕДИНСТВЕННОЕ сохранение
+  if (typeof saveReport === "function") {
+    saveReport(report);
+  }
+
+  const btn = document.getElementById("nextBtnPart1");
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+  btn.disabled = true;
+
+  // ❌ НИКАКОГО показа результата
+  setTimeout(() => {
+    window.location.href = "part2.html";
+  }, 1500);
 }
 
-document.getElementById("nextBtnPart1").onclick=checkPart1;
+// Автосохранение ответов
+document.querySelectorAll("input[type='text']").forEach(inp => {
+  inp.addEventListener("input", () => {
+    localStorage.setItem(inp.name, inp.value.trim());
+  });
+});
 
+// Контекстное меню
+document.addEventListener("contextmenu", e => {
+  e.preventDefault();
+  const selection = window.getSelection();
+  const menu = document.getElementById("contextMenu");
+  if (selection.toString().trim()) {
+    menu.style.left = `${e.pageX}px`;
+    menu.style.top = `${e.pageY}px`;
+    menu.style.display = "block";
+  }
+});
+
+document.addEventListener("click", () => {
+  document.getElementById("contextMenu").style.display = "none";
+});
+
+function highlightSelection() {
+  const selection = window.getSelection();
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+    const span = document.createElement("span");
+    span.className = "highlighted";
+    range.surroundContents(span);
+    selection.removeAllRanges();
+  }
+}
+
+// Audio lock
+window.onload = () => {
+  const savedName = localStorage.getItem("takerName");
+  if (savedName) document.getElementById("takerName").value = savedName;
+
+  document.querySelectorAll("input[type='text']").forEach(inp => {
+    const saved = localStorage.getItem(inp.name);
+    if (saved) inp.value = saved;
+  });
+
+  document.getElementById("nextBtnPart1").onclick = checkPart1;
+
+  const audio = document.getElementById("examAudio");
+  let lastTime = 0;
+  audio.addEventListener("timeupdate", () => {
+    lastTime = Math.max(lastTime, audio.currentTime);
+  });
+  audio.addEventListener("seeking", () => {
+    if (audio.currentTime < lastTime) {
+      audio.currentTime = lastTime;
+    }
+  });
+
+  document.getElementById("logo").onclick = () => {
+    window.location.href = "index.html";
+  };
+};
 </script>
-
 </body>
 </html>
