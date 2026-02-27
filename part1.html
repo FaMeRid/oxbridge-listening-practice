@@ -83,15 +83,7 @@
     text-align: center;
   }
 
-  /* Таблица становится адаптивнее */
-  table {
-    font-size: 14px;
-  }
-  th, td {
-    padding: 12px 8px;
-  }
-
-  /* таблица в одну колонку на маленьких экранах */
+  /* Основная адаптация: таблица превращается в блоки */
   .table-wrapper table,
   .table-wrapper thead,
   .table-wrapper tbody,
@@ -100,41 +92,65 @@
   .table-wrapper tr {
     display: block;
   }
+
+  /* Скрываем обычный заголовок таблицы (но он всё ещё есть для accessibility) */
   .table-wrapper thead tr {
     position: absolute;
     top: -9999px;
     left: -9999px;
   }
+
+  /* Каждая строка — отдельный блок */
   .table-wrapper tr {
     border: 1px solid #ddd;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
   }
+
+  /* Каждая ячейка — строка с label */
   .table-wrapper td {
     border: none;
-    border-bottom: 1px solid #eee;
+    padding: 8px 0;
     position: relative;
     padding-left: 50%;
+    white-space: normal;
+    text-align: left;
+    font-size: 15px;
   }
-  .table-wrapper td:before {
-    position: absolute;
-    top: 12px;
-    left: 10px;
-    width: 45%;
-    padding-right: 10px;
-    white-space: nowrap;
+
+  /* Добавляем label перед контентом,
+     используя content с названиями колонок */
+  .table-wrapper td:nth-of-type(1)::before {
+    content: "NAME OF RESTAURANT";
+    font-weight: bold;
+  }
+  .table-wrapper td:nth-of-type(2)::before {
+    content: "LOCATION";
+    font-weight: bold;
+  }
+  .table-wrapper td:nth-of-type(3)::before {
+    content: "REASON FOR RECOMMENDATION";
+    font-weight: bold;
+  }
+  .table-wrapper td:nth-of-type(4)::before {
+    content: "OTHER COMMENTS";
     font-weight: bold;
   }
 
-  /* подписи для ячеек таблицы */
-  .table-wrapper td:nth-of-type(1):before { content: "Restaurant"; }
-  .table-wrapper td:nth-of-type(2):before { content: "Location"; }
-  .table-wrapper td:nth-of-type(3):before { content: "Reason"; }
-  .table-wrapper td:nth-of-type(4):before { content: "Comments"; }
-
-  /* кнопки */
-  .part-buttons button {
-    padding: 14px 45px;
-    font-size: 16px;
+  /* Стили для псевдо‑элемента label */
+  .table-wrapper td::before {
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 }
   </style>
