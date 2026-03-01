@@ -31,82 +31,11 @@
     .part-buttons button, .part-buttons a button { padding: 16px 50px; background: #a81011; color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(168,16,17,0.3); }
     .part-buttons button:hover, .part-buttons a button:hover { background: #870d0e; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(168,16,17,0.4); }
     .part-buttons button.loading { background: #870d0e; cursor: not-allowed; }
-    #resultMessage { max-width: 600px; margin: 40px auto; padding: 25px; background: #e6f4ea; color: #155724; border-radius: 12px; font-size: 20px; font-weight: bold; text-align: center; display: none; box-shadow: 0 6px 20px rgba(0,0,0,0.1); border: 2px solid #28a745; }
     #contextMenu { position: absolute; display: none; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 5000; padding: 5px 0; min-width: 140px; }
     #contextMenu button { display: block; width: 100%; padding: 10px 20px; border: none; background: none; cursor: pointer; text-align: left; font-size: 15px; color: #333; }
     #contextMenu button:hover { background: #f5f5f5; }
     .highlighted { background-color: #fff176; padding: 2px 4px; border-radius: 3px; }
-    /* ===== MOBILE RESPONSIVE FOR PART 3 ===== */
-@media only screen and (max-width: 768px) {
-  /* Header */
-  .header-panel {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 10px;
-  }
-  .header-center {
-    font-size: 18px;
-    text-align: center;
-  }
-  .full-audio {
-    width: 90%;
-    height: 36px;
-  }
-
-  /* Main layout */
-  .main-content {
-    padding: 0 12px;
-    margin-top: 10px;
-  }
-  .title {
-    font-size: 26px;
-  }
-  .subtitle {
-    font-size: 16px;
-  }
-
-  /* Question cards */
-  .question-card {
-    padding: 14px;
-    margin: 15px 0;
-  }
-  .question-card h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  /* Labels & inputs */
-  label {
-    font-size: 15px;
-    margin: 8px 0;
-  }
-  input[type="radio"],
-  input[type="checkbox"] {
-    transform: scale(1.4);
-    margin-right: 8px;
-  }
-
-  /* Buttons */
-  .part-buttons {
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
-  }
-  .part-buttons button,
-  .part-buttons a button {
-    padding: 14px 38px;
-    font-size: 17px;
-    width: 90%;
-  }
-
-  /* Result message */
-  #resultMessage {
-    font-size: 17px;
-    padding: 18px;
-    margin-top: 18px;
-  }
-}
+    
   </style>
 </head>
 <body>
@@ -191,8 +120,6 @@
     <a href="part2.html"><button>← Part 2</button></a>
     <button id="nextBtnPart3">Part 4 →</button>
   </div>
-
-  <div id="resultMessage"></div>
 </div>
 
 <script>
@@ -211,7 +138,6 @@ const correctAnswers = {
   q29: "A",
   q30: "C"
 };
-
 function checkPart3() {
   console.log("Кнопка Part 3 нажата → checkPart3 запущена");
 
@@ -279,12 +205,6 @@ function checkPart3() {
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
   btn.disabled = true;
 
-  const msg = document.getElementById("resultMessage");
-  if (msg) {
-    msg.innerHTML = `Part 3: ${score} из ${total} (Band ≈ ${band})<br>Сохранение...`;
-    msg.style.display = "block";
-  }
-
   // Сохранение
   try {
     // Локально
@@ -309,13 +229,13 @@ function checkPart3() {
     console.error("Ошибка сохранения:", e);
   }
 
-  // Переход
+  // ✅ FIXED - Removed the 'if (msg)' line
   setTimeout(() => {
     btn.innerHTML = original;
     btn.disabled = false;
-    if (msg) msg.style.display = "none";
     window.location.href = "part4.html";
-  }, 2000);
+  }, 1500);
+
 }
 
 // Сохранение ответов при вводе

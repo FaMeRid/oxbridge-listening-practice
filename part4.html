@@ -44,80 +44,6 @@
     #contextMenu button { display: block; width: 100%; padding: 10px 20px; border: none; background: none; cursor: pointer; text-align: left; font-size: 15px; color: #333; }
     #contextMenu button:hover { background: #f5f5f5; }
     .highlighted { background-color: #fff176; padding: 2px 4px; border-radius: 3px; }
-    /* ===== MOBILE RESPONSIVE FOR PART 4 ===== */
-@media only screen and (max-width: 768px) {
-  /* Header */
-  .header-panel {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 10px;
-  }
-  .header-center {
-    font-size: 18px;
-    text-align: center;
-  }
-  .full-audio {
-    width: 90%;
-    height: 36px;
-  }
-
-  /* Main content */
-  .main-content {
-    padding: 0 12px;
-    margin-top: 10px;
-  }
-  .title {
-    font-size: 26px;
-  }
-  .subtitle {
-    font-size: 16px;
-  }
-
-  /* Question list */
-  .question-card {
-    padding: 14px;
-    margin: 15px 0;
-  }
-  .question-card li {
-    font-size: 16px;
-    line-height: 1.5;
-  }
-  input[type="text"] {
-    width: 80%;
-    margin: 8px 0;
-    padding: 10px 12px;
-    font-size: 16px;
-  }
-
-  /* Buttons */
-  .part-buttons {
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
-  }
-  .part-buttons button,
-  .part-buttons a button {
-    padding: 14px 38px;
-    font-size: 17px;
-    width: 90%;
-  }
-
-  /* Modal */
-  .modal-content {
-    padding: 20px;
-  }
-  .modal-content h2 {
-    font-size: 24px;
-  }
-  .modal-content p {
-    font-size: 16px;
-  }
-  .modal-actions button {
-    padding: 12px 28px;
-    font-size: 16px;
-  }
-}
   </style>
 </head>
 <body>
@@ -145,25 +71,32 @@
 
   <div class="question-card">
     <ul>
-      <li>Pollution from <input type="text" name="q31"> on the river bank.</li>
-      <li>In 1957, the River Thames was declared biologically <input type="text" name="q32"></li>
-      <li>Seals and even a <input type="text" name="q33"> have been seen.</li>
-      <li>Warehouses converted to restaurants and <input type="text" name="q34"></li>
-      <li>Plans to build a riverside <input type="text" name="q35"> and display <input type="text" name="q36"> projects.</li>
-      <li>In Paris, <input type="text" name="q37"> are created every summer.</li>
-      <li>Over 2 billion passengers travel by <input type="text" name="q38"> worldwide.</li>
-      <li>Goods transported by barges, electric <input type="text" name="q39">, or future <input type="text" name="q40"></li>
-    </ul>
-  </div>
+      <li>Reclaiming Urban Rivers<br>
+        Historical Background<br>
+        Nearly all major cities were built on a river.
+        Rivers were traditionally used for transport, fishing, and recreation.<br>
+        Industrial development and rising populations later led to:<br>
+        -More sewage from houses being discharged into the river. 
+        Pollution from <input type="text" name="q31"> on the river bank.</li>
+        <li>In 1957, the River Thames was declared biologically <input type="text" name="q32"></li>
+        <li>Seals and even a <input type="text" name="q33"> have been seen in the River Thames.</li>
+        <li> Riverside warehouses are converted to restaurants and <input type="text" name="q34"></li>
+        <li>In Los Angeles, there are plans to:<br>
+        Build a riverside <input type="text" name="q35"> <br> Display <input type="text" name="q36"> projects.</li>
+        <li>In Paris, <input type="text" name="q37">  are created on the sides of the river every summer.</li>
+        <li>Transport Possibilities<BR>
+        Over 2 billion passengers already travel by <input type="text" name="q38"> in cities around the world.</li>
+        <li>Changes in shopping habits mean the number of deliveries that are made is increasing.<br>
+        Instead of road transport, goods can be transported by large freight barges and electric<input type="text" name="q39">, or future <input type="text" name="q40"></li>
+        </ul>
+      </div>
 
   <div class="part-buttons">
     <a href="part3.html"><button>← Part 3</button></a>
     <button id="finishBtn">Finish & Submit</button>
   </div>
 
-  <!-- Добавляем недостающий div для сообщений (если нужен) -->
-  <div id="resultMessage" style="display:none; text-align:center; margin:20px; color:#155724; font-weight:bold;"></div>
-
+ 
   <div id="resultModal">
     <div class="modal-content">
       <h2>Your Final Result</h2>

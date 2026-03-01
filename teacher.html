@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Dashboard - IELTS Reports</title>
 
-  <!-- Firebase SDK — все нужные модули -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
@@ -16,7 +16,6 @@
   <script src="common.js"></script>
 
   <style>
-    /* Твой стиль без изменений — оставил как есть */
     :root {
       --primary: #a81011;
       --primary-dark: #870d0e;
@@ -76,9 +75,7 @@
       transition: all 0.3s;
     }
 
-    .logout-btn:hover {
-      background: #ffecec;
-    }
+    .logout-btn:hover { background: #ffecec; }
 
     .main-content {
       max-width: 1200px;
@@ -109,9 +106,7 @@
       transition: transform 0.3s;
     }
 
-    .stat-card:hover {
-      transform: translateY(-6px);
-    }
+    .stat-card:hover { transform: translateY(-6px); }
 
     .stat-card h3 {
       color: var(--primary);
@@ -330,89 +325,36 @@
       transform: translateY(0);
       box-shadow: 0 2px 8px rgba(168,16,17,0.2);
     }
-/* ===== MOBILE RESPONSIVE FOR TEACHER DASHBOARD ===== */
-@media only screen and (max-width: 768px) {
 
-  /* Header */
-  .header-panel {
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 15px;
-    gap: 8px;
-  }
-  .header-center {
-    font-size: 20px;
-    text-align: center;
-    flex: 1 1 100%;
-  }
-  .logo {
-    height: 40px;
-  }
-  .logout-btn {
-    padding: 8px 14px;
-    font-size: 14px;
-  }
-
-  /* Main Content */
-  .main-content {
-    padding: 0 12px;
-    margin-top: 20px;
-  }
-  h1 {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  /* Stats Cards */
-  .stats {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    margin-bottom: 30px;
-  }
-  .stat-card {
-    padding: 15px;
-  }
-  .stat-card h3 {
-    font-size: 14px;
-  }
-  .stat-card p {
-    font-size: 22px;
-  }
-
-  /* Reports Table */
-  .table-wrapper {
-    overflow-x: auto; /* оставляем, чтобы таблица прокручивалась */
-  }
-  table {
-    font-size: 14px;
-    min-width: 580px; /* позволяя горизонтальный скролл */
-  }
-  th, td {
-    padding: 10px;
-  }
-  th {
-    font-size: 12px;
-  }
-  .details-btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    width: 100%;
-  }
-
-  /* Modals */
-  .modal-content, .confirm-modal-content {
-    padding: 20px;
-    width: 90%;
-  }
-  .modal-content h2, .confirm-modal-content h2 {
-    font-size: 20px;
-  }
-  .answers-table th, .answers-table td {
-    font-size: 12px;
-    padding: 8px;
-  }
-}
+    @media only screen and (max-width: 768px) {
+      .header-panel {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 15px;
+        gap: 8px;
+      }
+      .header-center {
+        font-size: 20px;
+        text-align: center;
+        flex: 1 1 100%;
+      }
+      .logo { height: 40px; }
+      .logout-btn { padding: 8px 14px; font-size: 14px; }
+      .main-content { padding: 0 12px; margin-top: 20px; }
+      h1 { font-size: 24px; text-align: center; margin-bottom: 20px; }
+      .stats { grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
+      .stat-card { padding: 15px; }
+      .stat-card h3 { font-size: 14px; }
+      .stat-card p { font-size: 22px; }
+      .table-wrapper { overflow-x: auto; }
+      table { font-size: 14px; min-width: 580px; }
+      th, td { padding: 10px; }
+      th { font-size: 12px; }
+      .details-btn { padding: 8px 16px; font-size: 14px; width: 100%; }
+      .modal-content, .confirm-modal-content { padding: 20px; width: 90%; }
+      .modal-content h2, .confirm-modal-content h2 { font-size: 20px; }
+      .answers-table th, .answers-table td { font-size: 12px; padding: 8px; }
+    }
   </style>
 </head>
 <body>
@@ -423,13 +365,13 @@
     <h3>Teacher Login</h3>
     <div class="input-group">
       <span><i class="fas fa-user"></i></span>
-      <input type="text" id="login" placeholder="Login " autocomplete="off">
+      <input type="text" id="login" placeholder="Email" autocomplete="off">
     </div>
     <div class="input-group">
       <span><i class="fas fa-lock"></i></span>
       <input type="password" id="password" placeholder="Password" autocomplete="off">
     </div>
-    <button id="loginBtn" onclick="checkLogin()">Войти</button>
+    <button id="loginBtn" onclick="checkLogin()">Login</button>
     <div id="errorMsg"></div>
   </div>
 </div>
@@ -442,19 +384,19 @@
   </div>
 
   <div class="main-content">
-    <h1>Отчёты студентов</h1>
+    <h1>Student Reports</h1>
 
     <div class="stats">
       <div class="stat-card">
-        <h3>Количество студентов</h3>
+        <h3>Total Students</h3>
         <p id="studentCount">0</p>
       </div>
       <div class="stat-card">
-        <h3>Средний Band</h3>
+        <h3>Average Band</h3>
         <p id="avgBand">0.0</p>
       </div>
       <div class="stat-card">
-        <h3>Всего отчётов</h3>
+        <h3>Total Reports</h3>
         <p id="totalReports">0</p>
       </div>
     </div>
@@ -463,148 +405,54 @@
       <table>
         <thead>
           <tr>
-            <th>Студент</th>
-            <th>Счёт (correct/total)</th>
+            <th>Student</th>
+            <th>Score (correct/total)</th>
             <th>Band</th>
-            <th>Последний тест</th>
-            <th>Действия</th>
+            <th>Latest Test</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="reportsBody">
-          <tr><td colspan="5" style="text-align:center;padding:30px;">Загрузка...</td></tr>
+          <tr><td colspan="5" style="text-align:center;padding:30px;">Loading...</td></tr>
         </tbody>
       </table>
     </div>
 
     <button style="display:block;margin:0 auto 40px;padding:14px 40px;background:var(--danger);color:white;border:none;border-radius:50px;font-size:18px;cursor:pointer;" onclick="clearAllReports()">
-      Очистить все отчёты
+      Clear All Reports
     </button>
   </div>
 </div>
 
-<!-- Модалка деталей студента -->
+<!-- Student Details Modal -->
 <div id="detailsModal">
   <div class="modal-content">
     <span class="close-btn" onclick="closeDetails()">×</span>
-    <h2 id="modalTitle">Детали студента</h2>
+    <h2 id="modalTitle">Student Details</h2>
     <div id="modalContent"></div>
   </div>
 </div>
 
-<!-- Подтверждение очистки -->
+<!-- Clear Confirmation Modal -->
 <div id="clearConfirmModal">
   <div class="confirm-modal-content">
-    <h2>Подтверждение</h2>
-    <p>Вы уверены, что хотите удалить ВСЕ результаты студентов?<br>Это действие нельзя отменить!</p>
+    <h2>Confirmation</h2>
+    <p>Are you sure you want to delete ALL student results?<br>This action cannot be undone!</p>
     <div class="confirm-buttons">
-      <button class="confirm-btn cancel-btn" onclick="document.getElementById('clearConfirmModal').style.display='none'">Отмена</button>
-      <button class="confirm-btn delete-btn" id="confirmClearBtn">Удалить всё</button>
+      <button class="confirm-btn cancel-btn" onclick="document.getElementById('clearConfirmModal').style.display='none'">Cancel</button>
+      <button class="confirm-btn delete-btn" id="confirmClearBtn">Delete All</button>
     </div>
   </div>
 </div>
 
 <script>
-  // Защита очистки
-const CLEAR_PASSWORD = "oxbridge2026";  // ← твой пароль, меняй на нужный
-
-function confirmClearWithPassword() {
-  const input = document.getElementById("clearPassword").value.trim();
-  const errorEl = document.getElementById("clearError");
-
-  if (input === CLEAR_PASSWORD) {
-    document.getElementById("secureClearModal").style.display = "none";
-    showLoading(true);  // если у тебя есть loading overlay
-
-    db.collection("reports").get()
-      .then(snapshot => {
-        if (snapshot.empty) {
-          alert("База и так пустая");
-          showLoading(false);
-          return;
-        }
-
-        const batch = db.batch();
-        snapshot.forEach(doc => batch.delete(doc.ref));
-
-        batch.commit()
-          .then(() => {
-            alert("Все отчёты успешно удалены");
-            loadReports();  // обновляем таблицу
-            showLoading(false);
-          })
-          .catch(err => {
-            console.error("Ошибка batch delete:", err);
-            alert("Ошибка удаления: " + err.message);
-            showLoading(false);
-          });
-      })
-      .catch(err => {
-        console.error("Ошибка получения документов:", err);
-        alert("Не удалось прочитать базу: " + err.message);
-        showLoading(false);
-      });
-  } else {
-    errorEl.textContent = "Неверный пароль";
-    errorEl.style.display = "block";
-  }
-}
-// Авторизация учителя через Firebase Auth
-function signInTeacher(email, password) {
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      console.log("Учитель авторизован:", userCredential.user.email);
-      document.getElementById("loginOverlay").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
-      document.getElementById("dashboardHeader").style.display = "flex";
-      loadReports();
-    })
-    .catch(error => {
-      console.error("Ошибка авторизации:", error);
-      document.getElementById("errorMsg").innerText = "Ошибка входа: " + error.message;
-      // Если ошибка — остаёмся на логине
-    });
-}
-
-// Локальный логин + вызов Firebase Auth
-function checkLogin() {
-  const login = document.getElementById("login").value.trim();
-  const password = document.getElementById("password").value.trim();
-
-  const savedPass = localStorage.getItem("teacherPass");
-
-
-  if (login === "sh.shoberdiev@gmail.com" && (password === "asdfghjkl;'" || savedPass === password)) {
-    if (!savedPass) localStorage.setItem("teacherPass", password);
-
-    // Авторизуем в Firebase
-    const teacherEmail = "sh.shoberdiev@gmail.com";
-    signInTeacher(teacherEmail, password);
-  } else {
-    document.getElementById("errorMsg").innerText = "Неверный логин или пароль";
-  }
-}
-
-function logout() {
-  if (confirm("Выйти из аккаунта учителя?")) {
-    firebase.auth().signOut().then(() => {
-      localStorage.removeItem("teacherPass");
-      document.getElementById("loginOverlay").style.display = "flex";
-      document.getElementById("dashboard").style.display = "none";
-      document.getElementById("dashboardHeader").style.display = "none";
-      document.getElementById("login").value = "";
-      document.getElementById("password").value = "";
-      document.getElementById("errorMsg").innerText = "";
-    });
-  }
-}
-
-// Загрузка отчётов — только свежих по каждой части
+// ✅ FIXED - Group by student only, sum ALL parts
 function loadReports() {
   const tbody = document.getElementById("reportsBody");
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">Загрузка...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">Loading...</td></tr>';
 
   if (typeof db === "undefined" || !db) {
-    tbody.innerHTML = '<tr><td colspan="5" style="color:red;text-align:center;padding:30px;">Firebase не подключён. Проверьте common.js и интернет.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="color:red;text-align:center;padding:30px;">Firebase not connected.</td></tr>';
     return;
   }
 
@@ -614,49 +462,72 @@ function loadReports() {
       tbody.innerHTML = "";
 
       if (snapshot.empty) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">Пока нет результатов студентов</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;">No results yet</td></tr>';
         updateStats(0, 0, 0);
         return;
       }
 
-      // Самый свежий отчёт по каждой части
-      const latestPerPart = {};
+      // ✅ Group by student ONLY - get ALL reports per student
+      const allStudentReports = {};
+      
       snapshot.forEach(doc => {
         const r = doc.data();
-        const key = `${r.student}__${r.part}`;
-
-        const reportDate = r.timestamp ? r.timestamp.toDate() : new Date(r.date || 0);
-
-        if (!latestPerPart[key] || reportDate > new Date(latestPerPart[key]?.date || 0)) {
-          latestPerPart[key] = {
-            student: r.student,
-            part: r.part,
-            correct: r.correct || 0,
-            total: r.total || 0,
-            band: r.band || 0,
-            date: reportDate.toLocaleString("ru-RU"),
-            answers: r.answers || {}
-          };
+        const student = r.student;
+        
+        if (!allStudentReports[student]) {
+          allStudentReports[student] = [];
         }
+        
+        allStudentReports[student].push({
+          part: r.part,
+          correct: r.correct || 0,
+          total: r.total || 0,
+          band: r.band || 0,
+          timestamp: r.timestamp ? r.timestamp.toDate() : new Date(r.date || 0)
+        });
       });
 
-      // Группируем по студентам
+      // ✅ For each student, get LATEST of each part and sum ALL
       const studentSummary = {};
-      Object.values(latestPerPart).forEach(item => {
-        const s = item.student;
-        if (!studentSummary[s]) {
-          studentSummary[s] = { correct: 0, total: 0, date: item.date };
-        }
-        studentSummary[s].correct += item.correct;
-        studentSummary[s].total += item.total;
-        if (new Date(item.date) > new Date(studentSummary[s].date)) {
-          studentSummary[s].date = item.date;
-        }
+      
+      Object.keys(allStudentReports).forEach(student => {
+        const reports = allStudentReports[student];
+        
+        // Sort by timestamp descending
+        reports.sort((a, b) => b.timestamp - a.timestamp);
+        
+        // Group by part name and keep only LATEST of each part
+        const latestByPart = {};
+        reports.forEach(report => {
+          if (!latestByPart[report.part]) {
+            latestByPart[report.part] = report;
+          }
+        });
+        
+        // Sum ALL parts (however many exist)
+        let totalCorrect = 0;
+        let totalQuestions = 0;
+        let latestDate = new Date(0);
+        
+        Object.values(latestByPart).forEach(report => {
+          totalCorrect += report.correct;
+          totalQuestions += report.total;
+          if (report.timestamp > latestDate) {
+            latestDate = report.timestamp;
+          }
+        });
+        
+        studentSummary[student] = {
+          correct: totalCorrect,
+          total: totalQuestions,
+          date: latestDate.toLocaleString("en-US"),
+          partsCompleted: Object.keys(latestByPart).length
+        };
       });
 
       let totalStudents = Object.keys(studentSummary).length;
       let totalBandSum = 0;
-      let totalUniqueReports = Object.keys(latestPerPart).length;
+      let totalReports = totalStudents;
 
       Object.keys(studentSummary).forEach(student => {
         const g = studentSummary[student];
@@ -668,22 +539,23 @@ function loadReports() {
           <td>${student}</td>
           <td>${g.correct} / ${g.total}</td>
           <td class="${band >= 7 ? 'band-high' : band >= 5 ? 'band-medium' : 'band-low'}">${band}</td>
-          <td>${new Date(g.date).toLocaleString("ru-RU")}</td>
-          <td><button class="details-btn" onclick="showStudentDetails('${student}')">Посмотреть детали</button></td>
+          <td>${g.date}</td>
+          <td><button class="details-btn" onclick="showStudentDetails('${student}')">View Details</button></td>
         `;
         tbody.appendChild(row);
       });
 
-      updateStats(totalStudents, totalBandSum / totalStudents || 0, totalUniqueReports);
+      updateStats(totalStudents, totalBandSum / totalStudents || 0, totalReports);
     }, error => {
-      console.error("Ошибка загрузки отчётов:", error);
-      tbody.innerHTML = '<tr><td colspan="5" style="color:red;text-align:center;padding:30px;">Ошибка загрузки данных (проверьте Firebase)</td></tr>';
+      console.error("Error loading reports:", error);
+      tbody.innerHTML = '<tr><td colspan="5" style="color:red;text-align:center;padding:30px;">Error loading data</td></tr>';
     });
 }
+
 function showStudentDetails(student) {
   if (typeof db === "undefined" || !db) {
-    document.getElementById("modalContent").innerHTML = '<p style="color:red;">Firebase не подключён</p>';
-    document.getElementById("modalTitle").innerText = "Ошибка";
+    document.getElementById("modalContent").innerHTML = '<p style="color:red;">Firebase not connected</p>';
+    document.getElementById("modalTitle").innerText = "Error";
     document.getElementById("detailsModal").style.display = "flex";
     return;
   }
@@ -720,13 +592,12 @@ function showStudentDetails(student) {
       let totalCorrect = 0;
       let totalQuestions = 0;
 
-      let html = `<h2>Детали студента: ${student}</h2>`;
+      let html = `<h2>Student: ${student}</h2>`;
 
-      // Фиксированный порядок частей
       const partOrder = ["Part 1", "Part 2", "Part 3", "Part 4"];
 
       if (Object.keys(latest).length === 0) {
-        html += '<p style="color:orange;">У студента нет сохранённых отчётов</p>';
+        html += '<p style="color:orange;">No saved reports for this student</p>';
       } else {
         let hasAnyPart = false;
 
@@ -738,12 +609,11 @@ function showStudentDetails(student) {
             totalQuestions += report.total;
 
             html += `<h3>${partName} — ${report.correct} / ${report.total} (Band ${report.band})</h3>`;
-            html += '<p>Дата: ' + (report.date ? new Date(report.date).toLocaleString("ru-RU") : 'Неизвестно') + '</p>';
+            html += '<p>Date: ' + (report.date ? new Date(report.date).toLocaleString("en-US") : 'Unknown') + '</p>';
 
-            html += '<table class="answers-table"><tr><th>Вопрос</th><th>Ответ студента</th><th>Правильный</th><th>Статус</th></tr>';
+            html += '<table class="answers-table"><tr><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Status</th></tr>';
 
             if (Object.keys(report.answers).length > 0) {
-              // Сортируем вопросы по номеру (q1, q2, ..., q40)
               const sortedKeys = Object.keys(report.answers).sort((a, b) => {
                 const numA = parseInt(a.replace("q", ""), 10);
                 const numB = parseInt(b.replace("q", ""), 10);
@@ -774,7 +644,7 @@ function showStudentDetails(student) {
                 html += `<tr class="${rowClass}"><td>${q}</td><td>${user}</td><td>${correct}</td><td>${status}</td></tr>`;
               });
             } else {
-              html += '<tr><td colspan="4">Нет ответов в этой части</td></tr>';
+              html += '<tr><td colspan="4">No answers in this part</td></tr>';
             }
 
             html += '</table><hr style="margin:20px 0;">';
@@ -782,47 +652,45 @@ function showStudentDetails(student) {
         });
 
         if (!hasAnyPart) {
-          html += '<p style="color:orange;">У студента нет отчётов по основным частям (Part 1–4)</p>';
+          html += '<p style="color:orange;">No reports for main parts (Part 1–4)</p>';
         }
 
-        html = `<p><strong>Общий счёт (по имеющимся частям):</strong> ${totalCorrect} / ${totalQuestions}</p>` +
-               `<p><strong>Общий Band (приблизительный):</strong> ${Math.round((totalCorrect / totalQuestions || 0) * 9 * 2) / 2}</p><br>` +
+        html = `<p><strong>Total Score:</strong> ${totalCorrect} / ${totalQuestions}</p>` +
+               `<p><strong>Overall Band:</strong> ${Math.round((totalCorrect / totalQuestions || 0) * 9 * 2) / 2}</p><br>` +
                html;
       }
 
       document.getElementById("modalContent").innerHTML = html;
-      document.getElementById("modalTitle").innerText = `Детали студента: ${student}`;
+      document.getElementById("modalTitle").innerText = `Student: ${student}`;
       document.getElementById("detailsModal").style.display = "flex";
     })
     .catch(error => {
-      console.error("Ошибка деталей:", error);
-      document.getElementById("modalContent").innerHTML = `<p style="color:red;">Ошибка: ${error.message || 'Проверьте интернет или права доступа в Firebase'}</p>`;
-      document.getElementById("modalTitle").innerText = "Ошибка";
+      console.error("Error getting details:", error);
+      document.getElementById("modalContent").innerHTML = `<p style="color:red;">Error: ${error.message || 'Check internet or Firebase access'}</p>`;
+      document.getElementById("modalTitle").innerText = "Error";
       document.getElementById("detailsModal").style.display = "flex";
     });
 }
-// Нормализация
+
 function normalizeAnswer(str) {
   if (!str) return "";
   return str.toLowerCase().trim().replace(/\s+/g, " ").replace(/[.,!?;:'"()]/g, "").replace(/\b(a|an|the)\b\s*/gi, "");
 }
 
-// Обновление статистики
 function updateStats(students, avgBand, totalReports) {
   document.getElementById("studentCount").innerText = students;
   document.getElementById("avgBand").innerText = avgBand.toFixed(1);
   document.getElementById("totalReports").innerText = totalReports;
 }
 
-// Очистка всех отчётов
 function clearAllReports() {
   document.getElementById("clearConfirmModal").style.display = "flex";
 }
 
 document.getElementById("confirmClearBtn").addEventListener("click", () => {
-  if (confirm("Ты уверен? Это удалит ВСЕ результаты студентов из облака!")) {
+  if (confirm("Are you sure? This will delete ALL student results!")) {
     if (typeof db === "undefined" || !db) {
-      alert("Firebase не подключён — очистка невозможна");
+      alert("Firebase not connected");
       return;
     }
 
@@ -830,73 +698,87 @@ document.getElementById("confirmClearBtn").addEventListener("click", () => {
       const batch = db.batch();
       snapshot.forEach(doc => batch.delete(doc.ref));
       batch.commit().then(() => {
-        alert("Все результаты удалены");
+        alert("All results deleted");
         document.getElementById("clearConfirmModal").style.display = "none";
         loadReports();
       }).catch(error => {
-        console.error("Ошибка удаления:", error);
-        alert("Ошибка при удалении: " + error.message);
+        console.error("Delete error:", error);
+        alert("Error deleting: " + error.message);
       });
     }).catch(error => {
-      console.error("Ошибка получения отчётов:", error);
-      alert("Ошибка: " + error.message);
+      console.error("Error getting reports:", error);
+      alert("Error: " + error.message);
     });
   }
 });
 
-// Закрытие модалки деталей
 function closeDetails() {
   document.getElementById("detailsModal").style.display = "none";
 }
 
-// Автологин и авторизация
+function signInTeacher(email, password) {
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      console.log("Teacher logged in:", userCredential.user.email);
+      document.getElementById("loginOverlay").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+      document.getElementById("dashboardHeader").style.display = "flex";
+      loadReports();
+    })
+    .catch(error => {
+      console.error("Login error:", error);
+      document.getElementById("errorMsg").innerText = "Login error: " + error.message;
+    });
+}
+
+function checkLogin() {
+  const login = document.getElementById("login").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const savedPass = localStorage.getItem("teacherPass");
+
+  if (login === "sh.shoberdiev@gmail.com" && (password === "asdfghjkl;'" || savedPass === password)) {
+    if (!savedPass) localStorage.setItem("teacherPass", password);
+    signInTeacher(login, password);
+  } else {
+    document.getElementById("errorMsg").innerText = "Invalid email or password";
+  }
+}
+
+function logout() {
+  if (confirm("Logout from teacher account?")) {
+    firebase.auth().signOut().then(() => {
+      localStorage.removeItem("teacherPass");
+      document.getElementById("loginOverlay").style.display = "flex";
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("dashboardHeader").style.display = "none";
+      document.getElementById("login").value = "";
+      document.getElementById("password").value = "";
+      document.getElementById("errorMsg").innerText = "";
+    });
+  }
+}
+
 window.onload = function() {
   const savedPass = localStorage.getItem("teacherPass");
   if (savedPass && document.getElementById("login") && document.getElementById("password")) {
     document.getElementById("login").value = "sh.shoberdiev@gmail.com";
     document.getElementById("password").value = savedPass;
-    checkLogin(); // сразу пытаемся войти
+    checkLogin();
   }
 };
-// Проверяем, авторизован ли уже пользователь
+
 firebase.auth().onAuthStateChanged(user => {
   if (user) {
-    console.log("Пользователь уже авторизован:", user.email);
+    console.log("Teacher already logged in:", user.email);
     document.getElementById("loginOverlay").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
     document.getElementById("dashboardHeader").style.display = "flex";
     loadReports();
   } else {
-    console.log("Нет авторизованного пользователя");
+    console.log("No logged in user");
     document.getElementById("loginOverlay").style.display = "flex";
   }
 });
 </script>
-<!-- Модалка подтверждения очистки с паролем -->
-<div id="secureClearModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); justify-content:center; align-items:center; z-index:2000;">
-  <div class="modal-content" style="max-width:420px; padding:35px; text-align:center;">
-    <span class="close-btn" onclick="document.getElementById('secureClearModal').style.display='none'">×</span>
-    <h2 style="color:var(--danger);">Очистить ВСЕ отчёты?</h2>
-    <p style="margin:20px 0; color:#444;">
-      Это действие <strong>навсегда удалит</strong> все результаты студентов.<br>
-      Невозможно отменить.
-    </p>
-    
-    <p style="font-weight:bold; margin-bottom:12px;">Введите пароль:</p>
-    <input type="password" id="clearPassword" placeholder="Пароль безопасности" 
-           style="width:100%; padding:12px; font-size:16px; border:1px solid #ddd; border-radius:6px; margin-bottom:15px;">
-    
-    <div id="clearError" style="color:var(--danger); font-weight:bold; min-height:24px; margin:10px 0; display:none;"></div>
-    
-    <div class="confirm-buttons" style="display:flex; gap:20px; justify-content:center; margin-top:20px;">
-      <button class="confirm-btn cancel-btn" 
-              style="padding:12px 35px; background:#6c757d; color:white; border:none; border-radius:50px; cursor:pointer;"
-              onclick="document.getElementById('secureClearModal').style.display='none'">Отмена</button>
-      <button class="confirm-btn delete-btn" 
-              style="padding:12px 35px; background:var(--danger); color:white; border:none; border-radius:50px; cursor:pointer;"
-              onclick="confirmClearWithPassword()">Удалить всё</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
