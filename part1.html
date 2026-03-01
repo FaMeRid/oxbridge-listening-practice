@@ -1,47 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IELTS Listening Practice - Part 1</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Listening Practice - Part 1</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<script src="common.js"></script>
 
-  <script src="common.js"></script>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f8f8f8;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  <style>
-    html, body { margin: 0; padding: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f8f8f8; min-height: 100vh; overflow-x: hidden; }
-    .header-panel { position: sticky; top: 0; z-index: 1000; width: 100%; background: linear-gradient(135deg, #a81011 0%, #c21818 100%); color: white; display: flex; align-items: center; justify-content: space-between; padding: 12px 30px; box-sizing: border-box; min-height: 80px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
-    .logo { height: 50px; cursor: pointer; transition: transform 0.2s; }
-    .logo:hover { transform: scale(1.05); }
-    .header-center { flex: 1; text-align: center; font-size: 22px; font-weight: bold; letter-spacing: 1px; }
-    .header-right { display: flex; align-items: center; gap: 12px; }
-    .header-right label { color: white; font-weight: bold; }
-    .header-right input { padding: 8px 12px; border: none; border-radius: 6px; font-size: 16px; width: 180px; }
-    .full-audio { width: 260px; height: 40px; }
-    .main-content { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-    .title { text-align: center; color: #a81011; font-size: 32px; margin-bottom: 10px; font-weight: bold; }
-    .subtitle { text-align: center; color: #444; font-size: 18px; margin-bottom: 30px; }
-    .table-wrapper { overflow-x: auto; margin: 20px 0; }
-    table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 8px 30px rgba(0,0,0,0.12); border-radius: 12px; overflow: hidden; }
-    th, td { padding: 16px; text-align: left; border-bottom: 1px solid #eee; }
-    th { background: #a81011; color: white; font-weight: bold; }
-    input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; transition: all 0.2s; }
-    input[type="text"]:focus { outline: none; border-color: #a81011; box-shadow: 0 0 0 3px rgba(168,16,17,0.2); }
-    .part-buttons { text-align: center; margin: 50px 0; }
-    .part-buttons button { padding: 16px 60px; background: #a81011; color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(168,16,17,0.3); }
-    .part-buttons button:hover { background: #870d0e; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(168,16,17,0.4); }
-    .part-buttons button.loading { background: #870d0e; cursor: not-allowed; }
-    #resultMessage { max-width: 600px; margin: 40px auto; padding: 25px; background: #e6f4ea; color: #155724; border-radius: 12px; font-size: 20px; font-weight: bold; text-align: center; display: none; box-shadow: 0 6px 20px rgba(0,0,0,0.1); border: 2px solid #28a745; }
-    #contextMenu { position: absolute; display: none; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 5000; padding: 5px 0; min-width: 140px; }
-    #contextMenu button { display: block; width: 100%; padding: 10px 20px; border: none; background: none; cursor: pointer; text-align: left; font-size: 15px; color: #333; }
-    #contextMenu button:hover { background: #f5f5f5; }
-    .highlighted { background-color: #fff176; padding: 2px 4px; border-radius: 3px; }
-    /* ===== MOBILE RESPONSIVE PART1 ===== */
+.header-panel {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: linear-gradient(135deg, #a81011 0%, #c21818 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 30px;
+  box-sizing: border-box;
+  min-height: 80px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.logo {
+  height: 50px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.header-center {
+  flex: 1;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.full-audio {
+  width: 260px;
+  height: 40px;
+}
+
+.main-content {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.title {
+  text-align: center;
+  color: #a81011;
+  font-size: 32px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.subtitle {
+  text-align: center;
+  color: #444;
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background: #a81011;
+  color: white;
+  font-weight: bold;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #a81011;
+  box-shadow: 0 0 0 3px rgba(168,16,17,0.2);
+}
+
+.part-buttons {
+  text-align: center;
+  margin: 50px 0;
+}
+
+.part-buttons button {
+  padding: 16px 60px;
+  background: #a81011;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(168,16,17,0.3);
+}
+
+.part-buttons button:hover {
+  background: #870d0e;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(168,16,17,0.4);
+}
+
+.part-buttons button.loading {
+  background: #870d0e;
+  cursor: not-allowed;
+}
+
+#resultMessage {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #e6f4ea;
+  color: #155724;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  display: none;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  border: 2px solid #28a745;
+}
+
+#contextMenu {
+  position: absolute;
+  display: none;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 5000;
+  padding: 5px 0;
+  min-width: 140px;
+}
+
+#contextMenu button {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 15px;
+  color: #333;
+}
+
+#contextMenu button:hover {
+  background: #f5f5f5;
+}
+
+.highlighted {
+  background-color: #fff176;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+/* Модальное окно */
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 6000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(3px);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 30px 40px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.modal-content h2 {
+  color: #a81011;
+  margin-bottom: 15px;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 15px 0;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+.modal-content input:focus {
+  outline: none;
+  border-color: #a81011;
+  box-shadow: 0 0 0 3px rgba(168,16,17,0.2);
+}
+
+.modal-content button {
+  background: #a81011;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.modal-content button:hover {
+  background: #870d0e;
+  transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9);}
+  to { opacity: 1; transform: scale(1);}
+}
+
+/* MOBILE RESPONSIVE */
 @media only screen and (max-width: 768px) {
   .header-panel {
     flex-direction: column;
@@ -49,68 +281,28 @@
     gap: 10px;
     padding: 10px;
   }
-  .header-center {
-    font-size: 18px;
-  }
+  .header-center { font-size: 18px; }
   .header-right {
     flex-direction: column;
     gap: 8px;
     width: 100%;
     align-items: center;
   }
-  .header-right label {
-    font-size: 16px;
-  }
-  .header-right input {
-    width: 85%;
-    font-size: 16px;
-  }
-  .full-audio {
-    width: 85%;
-    margin-top: 8px;
-  }
-
-  .main-content {
-    padding: 0 12px;
-    margin-top: 20px;
-  }
-
-  .title {
-    font-size: 26px;
-  }
-  .subtitle {
-    font-size: 16px;
-    text-align: center;
-  }
-
-  /* Основная адаптация: таблица превращается в блоки */
-  .table-wrapper table,
-  .table-wrapper thead,
-  .table-wrapper tbody,
-  .table-wrapper th,
-  .table-wrapper td,
-  .table-wrapper tr {
-    display: block;
-  }
-
-  /* Скрываем обычный заголовок таблицы (но он всё ещё есть для accessibility) */
-  .table-wrapper thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-  }
-
-  /* Каждая строка — отдельный блок */
+  .full-audio { width: 85%; margin-top: 8px; }
+  .main-content { padding: 0 12px; margin-top: 20px; }
+  .title { font-size: 26px; }
+  .subtitle { font-size: 16px; text-align: center; }
+  .table-wrapper table, .table-wrapper thead, .table-wrapper tbody, .table-wrapper th,
+  .table-wrapper td, .table-wrapper tr { display: block; }
+  .table-wrapper thead tr { position: absolute; top: -9999px; left: -9999px; }
   .table-wrapper tr {
     border: 1px solid #ddd;
     margin-bottom: 12px;
     padding: 10px;
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
   }
-
-  /* Каждая ячейка — строка с label */
   .table-wrapper td {
     border: none;
     padding: 8px 0;
@@ -120,27 +312,10 @@
     text-align: left;
     font-size: 15px;
   }
-
-  /* Добавляем label перед контентом,
-     используя content с названиями колонок */
-  .table-wrapper td:nth-of-type(1)::before {
-    content: "NAME OF RESTAURANT";
-    font-weight: bold;
-  }
-  .table-wrapper td:nth-of-type(2)::before {
-    content: "LOCATION";
-    font-weight: bold;
-  }
-  .table-wrapper td:nth-of-type(3)::before {
-    content: "REASON FOR RECOMMENDATION";
-    font-weight: bold;
-  }
-  .table-wrapper td:nth-of-type(4)::before {
-    content: "OTHER COMMENTS";
-    font-weight: bold;
-  }
-
-  /* Стили для псевдо‑элемента label */
+  .table-wrapper td:nth-of-type(1)::before { content: "NAME OF RESTAURANT"; font-weight: bold; }
+  .table-wrapper td:nth-of-type(2)::before { content: "LOCATION"; font-weight: bold; }
+  .table-wrapper td:nth-of-type(3)::before { content: "REASON FOR RECOMMENDATION"; font-weight: bold; }
+  .table-wrapper td:nth-of-type(4)::before { content: "OTHER COMMENTS"; font-weight: bold; }
   .table-wrapper td::before {
     position: absolute;
     left: 0;
@@ -153,8 +328,9 @@
     overflow: hidden;
   }
 }
-  </style>
+</style>
 </head>
+
 <body>
 
 <div id="contextMenu">
@@ -163,12 +339,8 @@
 
 <div class="header-panel">
   <img id="logo" src="assets/logo.png" alt="Oxbridge Logo" class="logo">
-  <div class="header-center">
-    IELTS Listening Practice - Part 1
-  </div>
+  <div class="header-center">IELTS Listening Practice - Part 1</div>
   <div class="header-right">
-    <label for="takerName">Student Name:</label>
-    <input type="text" id="takerName" placeholder="Enter your name">
     <audio id="examAudio" controls class="full-audio">
       <source src="sounds/listening1.1/part1.mp3" type="audio/mpeg">
       Your browser does not support audio.
@@ -176,12 +348,20 @@
   </div>
 </div>
 
+<!-- Модальное окно для имени -->
+<div id="nameModal" class="modal">
+  <div class="modal-content">
+    <h2>Welcome to IELTS Listening Practice</h2>
+    <p>Please enter your name to start the test:</p>
+    <input type="text" id="modalTakerName" placeholder="Your Name">
+    <button id="saveNameBtn">Start</button>
+  </div>
+</div>
+
 <div class="main-content">
   <div class="title">Part 1: Questions 1–10</div>
-  <div class="subtitle">
-    <strong>Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.</strong>
-  </div>
-
+  <div class="subtitle"><strong>Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.</strong></div>
+  
   <div class="table-wrapper">
     <table>
       <tr>
@@ -200,7 +380,7 @@
         <td>Paloma</td>
         <td>Bow Street next to the cinema</td>
         <td><input type="text" name="q3"> food, good for sharing</td>
-        <td>Friendly staff. £50 deposit. Limited <input type="text" name="q4"> food</td>
+        <td>Friendly staff. £50 deposit. Limited <input type="text" name="q4"></td>
       </tr>
       <tr>
         <td>The <input type="text" name="q5"></td>
@@ -217,32 +397,20 @@
 </div>
 
 <script>
-// Проверка Firebase
-if (typeof firebase === "undefined") {
-  console.error("Firebase SDK не загрузился!");
-}
+if (typeof firebase === "undefined") { console.error("Firebase SDK не загрузился!"); }
 
-// Правильные ответы
 const correctAnswersPart1 = {
-  q1: "fish",
-  q2: "roof",
-  q3: "spanish",
-  q4: "vegetarian",
-  q5: "audley",
-  q6: "hotel",
-  q7: "reviews",
-  q8: "local",
-  q9: "30",
-  q10: "average"
+  q1: "fish", q2: "roof", q3: "spanish", q4: "vegetarian",
+  q5: "audley", q6: "hotel", q7: "reviews", q8: "local",
+  q9: "30", q10: "average"
 };
 
-function checkPart1() {
-  const takerNameInput = document.getElementById("takerName");
-  const takerName = takerNameInput && takerNameInput.value.trim()
-    ? takerNameInput.value.trim()
-    : "Anonymous";
+function normalizeAnswer(ans) {
+  return ans.trim().toLowerCase();
+}
 
-  localStorage.setItem("takerName", takerName);
+function checkPart1() {
+  const takerName = localStorage.getItem("takerName") || "Anonymous";
 
   let score = 0;
   let answers = {};
@@ -250,16 +418,8 @@ function checkPart1() {
   for (let key in correctAnswersPart1) {
     const input = document.querySelector(`input[name="${key}"]`);
     const userAnswer = input ? input.value.trim() : "";
-
-    answers[key] = {
-      user: userAnswer,
-      correct: correctAnswersPart1[key]
-    };
-
-    if (
-      normalizeAnswer(userAnswer) ===
-      normalizeAnswer(correctAnswersPart1[key])
-    ) {
+    answers[key] = { user: userAnswer, correct: correctAnswersPart1[key] };
+    if (normalizeAnswer(userAnswer) === normalizeAnswer(correctAnswersPart1[key])) {
       score++;
     }
   }
@@ -274,22 +434,16 @@ function checkPart1() {
     answers
   };
 
-  // ✅ ЕДИНСТВЕННОЕ сохранение
-  if (typeof saveReport === "function") {
-    saveReport(report);
-  }
+  if (typeof saveReport === "function") saveReport(report);
 
   const btn = document.getElementById("nextBtnPart1");
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
   btn.disabled = true;
 
-  // ❌ НИКАКОГО показа результата
-  setTimeout(() => {
-    window.location.href = "part2.html";
-  }, 1500);
+  setTimeout(() => { window.location.href = "part2.html"; }, 1500);
 }
 
-// Автосохранение ответов
+// Автосохранение
 document.querySelectorAll("input[type='text']").forEach(inp => {
   inp.addEventListener("input", () => {
     localStorage.setItem(inp.name, inp.value.trim());
@@ -323,11 +477,24 @@ function highlightSelection() {
   }
 }
 
-// Audio lock
+// Модальное окно
 window.onload = () => {
   const savedName = localStorage.getItem("takerName");
-  if (savedName) document.getElementById("takerName").value = savedName;
+  if (!savedName) {
+    const modal = document.getElementById("nameModal");
+    modal.style.display = "flex";
+    document.getElementById("saveNameBtn").onclick = () => {
+      const inputName = document.getElementById("modalTakerName").value.trim();
+      if (inputName) {
+        localStorage.setItem("takerName", inputName);
+        modal.style.display = "none";
+      } else {
+        alert("Please enter your name.");
+      }
+    };
+  }
 
+  // Заполняем автосохранённые ответы
   document.querySelectorAll("input[type='text']").forEach(inp => {
     const saved = localStorage.getItem(inp.name);
     if (saved) inp.value = saved;
@@ -335,21 +502,15 @@ window.onload = () => {
 
   document.getElementById("nextBtnPart1").onclick = checkPart1;
 
+  // Audio lock
   const audio = document.getElementById("examAudio");
   let lastTime = 0;
-  audio.addEventListener("timeupdate", () => {
-    lastTime = Math.max(lastTime, audio.currentTime);
-  });
-  audio.addEventListener("seeking", () => {
-    if (audio.currentTime < lastTime) {
-      audio.currentTime = lastTime;
-    }
-  });
+  audio.addEventListener("timeupdate", () => { lastTime = Math.max(lastTime, audio.currentTime); });
+  audio.addEventListener("seeking", () => { if (audio.currentTime < lastTime) audio.currentTime = lastTime; });
 
-  document.getElementById("logo").onclick = () => {
-    window.location.href = "index.html";
-  };
+  document.getElementById("logo").onclick = () => { window.location.href = "index.html"; };
 };
 </script>
+
 </body>
 </html>
